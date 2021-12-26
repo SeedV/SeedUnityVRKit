@@ -1,0 +1,1 @@
+[Unity-chan](https://unity-chan.com/) is an original character for developers provided by Unity Technologies Japan. It's released under the [Unity-chan License](https://unity-chan.com/contents/license_en/).
