@@ -31,9 +31,11 @@ public class InputController : MonoBehaviour {
   [SerializeField] private RenderTexture _videoTexture;
   // TODO: Hide this field if _inputMode isn't set to video.
   [SerializeField] private VideoClip _videoClip;
+  [SerializeField] private WebcamController _webcamController;
 
   public IEnumerator Start() {
     if (_inputMode == InputMode.Video) {
+      _webcamController.gameObject.SetActive(false);
       _mainUI.texture = _videoTexture;
       VideoPlayer videoPlayer = GetComponent<VideoPlayer>();
       videoPlayer.clip = _videoClip;
@@ -41,7 +43,8 @@ public class InputController : MonoBehaviour {
       videoPlayer.targetTexture = _videoTexture;
       videoPlayer.Play();
     } else if (_inputMode == InputMode.Webcam) {
-      // webcam
+      _webcamController.gameObject.SetActive(true);
+      _mainUI.texture = _webcamController.Buffer;
     } else {
       Debug.LogError("Invalid InputMode.");
     }

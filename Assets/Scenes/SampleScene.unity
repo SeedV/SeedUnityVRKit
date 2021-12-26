@@ -155,6 +155,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &488849826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 488849827}
+  - component: {fileID: 488849828}
+  m_Layer: 0
+  m_Name: WebcamController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &488849827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488849826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1022700813}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &488849828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488849826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6885f5558364c6585d6788ff8ce6e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraSource: 
+  _resolution: {x: 1080, y: 1080}
+  _hFlip: 1
 --- !u!1001 &548592836
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -486,7 +533,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 488849827}
   m_Father: {fileID: 260867322}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -502,10 +550,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d07b3e73c0043d49519e6af864d813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputMode: 0
+  _inputMode: 1
   _mainUI: {fileID: 1639194951}
   _videoTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
   _videoClip: {fileID: 32900000, guid: 9dc390bff248c4a95af357fd1af8e520, type: 3}
+  _webcamController: {fileID: 488849828}
 --- !u!328 &1022700815
 VideoPlayer:
   m_ObjectHideFlags: 0
