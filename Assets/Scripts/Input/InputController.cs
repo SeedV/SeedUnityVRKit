@@ -36,7 +36,6 @@ public class InputController : MonoBehaviour {
   public IEnumerator Start() {
     if (_inputMode == InputMode.Video) {
       _webcamController.gameObject.SetActive(false);
-      _mainUI.texture = _videoTexture;
       VideoPlayer videoPlayer = GetComponent<VideoPlayer>();
       videoPlayer.clip = _videoClip;
       yield return new WaitUntil(() => !videoPlayer.isPrepared);
@@ -44,9 +43,9 @@ public class InputController : MonoBehaviour {
       videoPlayer.Play();
     } else if (_inputMode == InputMode.Webcam) {
       _webcamController.gameObject.SetActive(true);
-      _mainUI.texture = _webcamController.Buffer;
     } else {
       Debug.LogError("Invalid InputMode.");
     }
+    _mainUI.texture = _videoTexture;
   }
 }

@@ -202,6 +202,7 @@ MonoBehaviour:
   _cameraSource: 
   _resolution: {x: 1080, y: 1080}
   _hFlip: 1
+  _buffer: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
 --- !u!1001 &548592836
 PrefabInstance:
   m_ObjectHideFlags: 0

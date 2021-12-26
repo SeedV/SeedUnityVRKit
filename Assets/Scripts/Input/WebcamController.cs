@@ -15,21 +15,19 @@
 using UnityEngine;
 
 public class WebcamController : MonoBehaviour {
-  public RenderTexture Buffer { get; private set; }
   [SerializeField] string _cameraSource;
   [SerializeField] Vector2Int _resolution = new Vector2Int(1080, 1080);
   [SerializeField] private bool _hFlip = false;
+  [SerializeField] RenderTexture _buffer;
   private WebCamTexture _webcam;
 
   public void OnEnable() {
     _webcam = new WebCamTexture(_cameraSource, _resolution.x, _resolution.y, 30);
-    Buffer = new RenderTexture(_resolution.x, _resolution.y, 0);
     _webcam.Play();
   }
 
   public void OnDisable() {
     if (_webcam) Destroy(_webcam);
-    if (Buffer) Destroy(Buffer);
   }
 
   public void Update() {
@@ -37,6 +35,6 @@ public class WebcamController : MonoBehaviour {
     bool vFlip = _webcam.videoVerticallyMirrored;
     Vector2 scale = new Vector2(_hFlip ? -1 : 1, vFlip ? -1 : 1);
     Vector2 offset = new Vector2(_hFlip ? 1 : 0 / 2, vFlip ? 1 : 0);
-    Graphics.Blit(_webcam, Buffer, scale, offset);
+    Graphics.Blit(_webcam, _buffer, scale, offset);
   }
 }
