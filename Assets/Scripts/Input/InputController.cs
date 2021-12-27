@@ -35,7 +35,8 @@ public class InputController : MonoBehaviour {
 
   public IEnumerator Start() {
     if (_inputMode == InputMode.Video) {
-      VideoPlayer videoPlayer = Instantiate(_videoPretab, gameObject.transform).GetComponent<VideoPlayer>();
+      VideoPlayer videoPlayer =
+          Instantiate(_videoPretab, gameObject.transform).GetComponent<VideoPlayer>();
       videoPlayer.clip = _videoClip;
       yield return new WaitUntil(() => !videoPlayer.isPrepared);
       videoPlayer.targetTexture = _videoTexture;
