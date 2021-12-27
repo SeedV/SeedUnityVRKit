@@ -18,7 +18,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
-[RequireComponent(typeof(VideoPlayer))]
 public class InputController : MonoBehaviour {
   public enum InputMode {
     Video,
@@ -31,19 +30,22 @@ public class InputController : MonoBehaviour {
   [SerializeField] private RenderTexture _videoTexture;
   // TODO: Hide this field if _inputMode isn't set to video.
   [SerializeField] private VideoClip _videoClip;
+  [SerializeField] private GameObject _webcamPretab;
+  [SerializeField] private GameObject _videoPretab;
 
   public IEnumerator Start() {
     if (_inputMode == InputMode.Video) {
-      _mainUI.texture = _videoTexture;
-      VideoPlayer videoPlayer = GetComponent<VideoPlayer>();
+      VideoPlayer videoPlayer =
+          Instantiate(_videoPretab, gameObject.transform).GetComponent<VideoPlayer>();
       videoPlayer.clip = _videoClip;
       yield return new WaitUntil(() => !videoPlayer.isPrepared);
       videoPlayer.targetTexture = _videoTexture;
       videoPlayer.Play();
     } else if (_inputMode == InputMode.Webcam) {
-      // webcam
+      Instantiate(_webcamPretab, gameObject.transform);
     } else {
       Debug.LogError("Invalid InputMode.");
     }
+    _mainUI.texture = _videoTexture;
   }
 }
