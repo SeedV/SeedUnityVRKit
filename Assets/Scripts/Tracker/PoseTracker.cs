@@ -30,6 +30,7 @@ public class PoseTracker : MonoBehaviour {
   [SerializeField] private InferenceMode _preferableInferenceMode;
   [SerializeField] private TextureFramePool _textureFramePool;
   [SerializeField] private Texture _sourceTexture;
+  [SerializeField] private PoseLandmarkListAnnotationController _annotationController;
   [SerializeField] private bool _hFlip;
   [SerializeField] private bool _vFlip;
   [SerializeField] private int _rotation;
@@ -83,8 +84,9 @@ public class PoseTracker : MonoBehaviour {
   }
 
   private void OnPoseLandmarksOutput(NormalizedLandmarkList poseLandmarks) {
-    // TODO: Just log the landmarks, we will do something helpful in a follow-up commit.
-    Logger.LogInfo(_TAG, $"{poseLandmarks}");
+    if (_annotationController != null && poseLandmarks != null) {
+      _annotationController.DrawLater(poseLandmarks);
+    }
   }
 
   private void DecideInferenceMode() {
