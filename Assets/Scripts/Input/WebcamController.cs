@@ -15,10 +15,10 @@
 using UnityEngine;
 
 public class WebcamController : MonoBehaviour {
-  [SerializeField] string _cameraSource;
-  [SerializeField] Vector2Int _resolution = new Vector2Int(1080, 1080);
+  [SerializeField] private string _cameraSource;
+  [SerializeField] private Vector2Int _resolution = new Vector2Int(1080, 1080);
   [SerializeField] private bool _hFlip = false;
-  [SerializeField] RenderTexture _buffer;
+  [SerializeField] private RenderTexture _buffer;
   private WebCamTexture _webcam;
 
   public void OnEnable() {
