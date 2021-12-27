@@ -60,6 +60,11 @@ namespace Mediapipe.Unity.PoseTracking
 
     public Status StartRunAsync(ImageSource imageSource)
     {
+      return StartRunAsync(BuildSidePacket(imageSource));
+    }
+
+    public Status StartRunAsync(SidePacket sidePacket)
+    {
       InitializeOutputStreams();
 
       _poseDetectionStream.AddListener(PoseDetectionCallback, true).AssertOk();
@@ -67,7 +72,7 @@ namespace Mediapipe.Unity.PoseTracking
       _poseWorldLandmarksStream.AddListener(PoseWorldLandmarksCallback, true).AssertOk();
       _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback, true).AssertOk();
 
-      return calculatorGraph.StartRun(BuildSidePacket(imageSource));
+      return calculatorGraph.StartRun(sidePacket);
     }
 
     public override void Stop()
