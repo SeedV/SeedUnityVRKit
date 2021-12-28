@@ -14,8 +14,7 @@
 
 using UnityEngine;
 
-public class Joints
-{
+public class Joint {
   // The names of each BlazePose joints in the same order.
   // https://google.github.io/mediapipe/images/mobile/pose_tracking_full_body_landmarks.png
   public enum Landmarks {
@@ -55,7 +54,16 @@ public class Joints
   };
 
   // The initial placement when the app starts.
-  public Transform InitRotation { get; set; }
-  // Transform  world Quaternion into local one.
-  public Transform InverseRotation { get; set; }
+  // It depends on the scene setup but has nothing to do with the detection.
+  public Quaternion InitRotation { get; private set; }
+  private Transform obj;
+
+  public Joint(Transform initial) {
+    obj = initial;
+    InitRotation = initial.rotation;
+  }
+
+  public void SetRotation(Quaternion rotation) {
+    obj.rotation = rotation * InitRotation;
+  }
 }

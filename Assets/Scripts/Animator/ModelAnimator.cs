@@ -21,15 +21,16 @@ using UnityEngine;
 public class ModelAnimator : MonoBehaviour {
   private const string _TAG = nameof(ModelAnimator);
   private Animator _anim;
-  private Transform _hip;
+  private Joint _hip;
 
   void Start() {
     _anim = GetComponent<Animator>();
-    _hip = _anim.GetBoneTransform(HumanBodyBones.Hips);
+    _hip = new Joint(_anim.GetBoneTransform(HumanBodyBones.Hips));
+    // Logger.LogInfo(_TAG, $"Initial hip rotation: {_hip.transform.rotation}");
   }
 
   void Update() {
     // Test code
-    _hip.transform.rotation = Quaternion.Euler(0, 45, -90);
+    _hip.SetRotation(Quaternion.Euler(0, 0, 45));
   }
 }
