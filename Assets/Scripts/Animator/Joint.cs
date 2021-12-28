@@ -15,55 +15,22 @@
 using UnityEngine;
 
 public class Joint {
-  // The names of each BlazePose joints in the same order.
-  // https://google.github.io/mediapipe/images/mobile/pose_tracking_full_body_landmarks.png
-  public enum Landmarks {
-    Nose = 0,
-    LeftEyeInner = 1,
-    LeftEye = 2,
-    LeftEyeOuter = 3,
-    RightEyeInner = 4,
-    RightEye = 5,
-    RightEyeOuter = 6,
-    LeftEar = 7,
-    RightEar = 8,
-    MouthLeft = 9,
-    MouthRight = 10,
-    LeftShoulder = 11,
-    RightShoulder = 12,
-    LeftElbow = 13,
-    RightElbow = 14,
-    LeftWrist = 15,
-    RightWrist = 16,
-    LeftPinky = 17,
-    RightPinky = 18,
-    LeftIndex = 19,
-    RightIndex = 20,
-    LeftThumb = 21,
-    RightThumb = 22,
-    LeftHip = 23,
-    RightHip = 24,
-    LeftKnee = 25,
-    RightKnee = 26,
-    LeftAnkle = 27,
-    RightAnkle = 28,
-    LeftHeel = 29,
-    RightHeel = 30,
-    LeftFootIndex = 31,
-    RightFootIndex = 32,
-  };
-
   // The initial placement when the app starts.
-  // It depends on the scene setup but has nothing to do with the detection.
+  // It depends on the scene setup but has nothing to do with the animation.
   public Quaternion InitRotation { get; private set; }
-  private Transform obj;
+  private Transform _target;
 
-  public Joint(Transform initial) {
-    obj = initial;
-    InitRotation = initial.rotation;
+  public Joint(Transform target) {
+    _target = target;
+    InitRotation = target.rotation;
   }
 
+  // Set the rotation referenced by the Quaternion.
   public void SetRotation(Quaternion rotation) {
-    obj.rotation = rotation * InitRotation;
+    _target.rotation = rotation * InitRotation;
+  }
+
+  public void SetRotation(Vector3 lookAt, Vector3 upwards) {
+    SetRotation(Quaternion.LookRotation(lookAt, upwards));
   }
 }

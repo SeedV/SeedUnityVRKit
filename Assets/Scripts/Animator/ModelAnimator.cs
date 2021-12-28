@@ -12,25 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using System.Collections.Generic;
-
-using Logger = Mediapipe.Logger;  // Disambiguation with UnityEngine.Logger
 using UnityEngine;
 
 public class ModelAnimator : MonoBehaviour {
-  private const string _TAG = nameof(ModelAnimator);
   private Animator _anim;
   private Joint _hip;
 
-  void Start() {
+  public void Start() {
     _anim = GetComponent<Animator>();
     _hip = new Joint(_anim.GetBoneTransform(HumanBodyBones.Hips));
-    // Logger.LogInfo(_TAG, $"Initial hip rotation: {_hip.transform.rotation}");
   }
 
-  void Update() {
+  public void Update() {
     // Test code
-    _hip.SetRotation(Quaternion.Euler(0, 0, 45));
+    _hip.SetRotation(new Vector3(-1, 0, 0), Vector3.up);
   }
 }
