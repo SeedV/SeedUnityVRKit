@@ -25,7 +25,7 @@ public class PoseTracker : MonoBehaviour {
   private const string _TAG = nameof(PoseTracker);
   public enum InferenceMode {
     CPU,
-    GPU
+    GPU,
   }
   [SerializeField] private InferenceMode _preferableInferenceMode;
   [SerializeField] private TextureFramePool _textureFramePool;
