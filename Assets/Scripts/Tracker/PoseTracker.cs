@@ -34,6 +34,7 @@ public class PoseTracker : MonoBehaviour {
   [SerializeField] private bool _hFlip;
   [SerializeField] private bool _vFlip;
   [SerializeField] private int _rotation;
+  [SerializeField] private ModelAnimator _modelAnimator = null;
   private PoseTrackingGraph _graphRunner;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
@@ -86,6 +87,9 @@ public class PoseTracker : MonoBehaviour {
   private void OnPoseLandmarksOutput(NormalizedLandmarkList poseLandmarks) {
     if (_annotationController != null && poseLandmarks != null) {
       _annotationController.DrawLater(poseLandmarks);
+    }
+    if (_modelAnimator != null && poseLandmarks != null) {
+      _modelAnimator.SetPoseLandmarks(poseLandmarks);
     }
   }
 
