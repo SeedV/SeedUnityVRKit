@@ -93,7 +93,7 @@ public class ModelAnimator : MonoBehaviour {
     Vector3 forward = GetNormal(_joints[Landmarks.LeftShoulder].position, _joints[Landmarks.LeftHip].position, _joints[Landmarks.RightHip].position);
     foreach (Joint joint in _joints) {
       if (joint != null && joint.Child != null) {
-        joint.Forward = GetLook(joint, joint.Child, forward);
+        joint.Forward = Quaternion.LookRotation(joint.position - joint.Child.position, forward);
       }
     }
     Joint hip = _joints[Landmarks.Hip];
@@ -123,8 +123,4 @@ public class ModelAnimator : MonoBehaviour {
     // Cross the vectors to get a perpendicular vector, then normalize it.
     return Vector3.Cross(side1, side2).normalized;
   }
-
-  private Quaternion GetLook(Joint p1, Joint p2, Vector3 forward) {
-    return Quaternion.LookRotation(p1.position - p2.position, forward);
-  }  
 }
