@@ -15,21 +15,53 @@
 using UnityEngine;
 
 public class Joint {
-  // The initial placement when the app starts.
-  // It depends on the scene setup but has nothing to do with the animation.
-  public Quaternion InitRotation { get; private set; }
-  private Transform _target;
+
+  // <summary>
+  // When set, the current joint will act as a hinge with only two directions of freedom.
+  // It will always face towards its child bone.
+  // </summary>
+  public Quaternion Forward { private get; set; }
+
+  // <summary>
+  // The target's position. This should be used for setting up forward vectors and almost should
+  // not be used outside of initialization code.
+  // </summary>
+  public Vector3 position => _target.position;
+
+  public Joint Child;
+  public Joint Parent;
+
+  // <summary>
+  // The initial placement in the scene.
+  // </summary>
+  private readonly Quaternion _initRotation;
+
+  // <summary>
+  // The transform target.
+  // </summary>
+  private readonly Transform _target;
 
   public Joint(Transform target) {
     _target = target;
-    InitRotation = target.rotation;
+    if (_target != null) {
+      _initRotation = target.rotation;
+    }
   }
 
+  // <summary>
   // Set the rotation referenced by the Quaternion.
+  // If the forward rotation is set, it would be used to adjust so that the joint will face to
+  // its child joint.
+  // </summary>
   public void SetRotation(Quaternion rotation) {
-    _target.rotation = rotation * InitRotation;
+    _target.rotation = rotation * Quaternion.Inverse(Forward) * _initRotation;
   }
 
+  // <summary>
+  // Set the rotation referenced by forward and upward vectors.
+  // If the forward rotation is set, it would be used to adjust so that the joint will face to
+  // its child joint.
+  // </summary>
   public void SetRotation(Vector3 lookAt, Vector3 upwards) {
     SetRotation(Quaternion.LookRotation(lookAt, upwards));
   }

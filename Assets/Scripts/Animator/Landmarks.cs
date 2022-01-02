@@ -14,38 +14,48 @@
 
 // The names of each BlazePose joints in the same order.
 // https://google.github.io/mediapipe/images/mobile/pose_tracking_full_body_landmarks.png
-public enum Landmarks {
-  Nose = 0,
-  LeftEyeInner = 1,
-  LeftEye = 2,
-  LeftEyeOuter = 3,
-  RightEyeInner = 4,
-  RightEye = 5,
-  RightEyeOuter = 6,
-  LeftEar = 7,
-  RightEar = 8,
-  MouthLeft = 9,
-  MouthRight = 10,
-  LeftShoulder = 11,
-  RightShoulder = 12,
-  LeftElbow = 13,
-  RightElbow = 14,
-  LeftWrist = 15,
-  RightWrist = 16,
-  LeftPinky = 17,
-  RightPinky = 18,
-  LeftIndex = 19,
-  RightIndex = 20,
-  LeftThumb = 21,
-  RightThumb = 22,
-  LeftHip = 23,
-  RightHip = 24,
-  LeftKnee = 25,
-  RightKnee = 26,
-  LeftAnkle = 27,
-  RightAnkle = 28,
-  LeftHeel = 29,
-  RightHeel = 30,
-  LeftFootIndex = 31,
-  RightFootIndex = 32,
+public class Landmarks {
+  public const int Nose = 0;
+  public const int LeftEyeInner = 1;
+  public const int LeftEye = 2;
+  public const int LeftEyeOuter = 3;
+  public const int RightEyeInner = 4;
+  public const int RightEye = 5;
+  public const int RightEyeOuter = 6;
+  public const int LeftEar = 7;
+  public const int RightEar = 8;
+  public const int MouthLeft = 9;
+  public const int MouthRight = 10;
+  public const int LeftShoulder = 11;
+  public const int RightShoulder = 12;
+  public const int LeftElbow = 13;
+  public const int RightElbow = 14;
+  public const int LeftWrist = 15;
+  public const int RightWrist = 16;
+  public const int LeftPinky = 17;
+  public const int RightPinky = 18;
+  public const int LeftIndex = 19;
+  public const int RightIndex = 20;
+  public const int LeftThumb = 21;
+  public const int RightThumb = 22;
+  public const int LeftHip = 23;
+  public const int RightHip = 24;
+  public const int LeftKnee = 25;
+  public const int RightKnee = 26;
+  public const int LeftAnkle = 27;
+  public const int RightAnkle = 28;
+  public const int LeftHeel = 29;
+  public const int RightHeel = 30;
+  public const int LeftFootIndex = 31;
+  public const int RightFootIndex = 32;
+
+  public const int PoseCount = 33;
+
+  // Estimated landmarks
+  public const int Hip = 33;
+  public const int Head = 34;
+  public const int Neck = 35;
+  public const int Spine = 36;
+
+  public const int Total = 37;
 };
