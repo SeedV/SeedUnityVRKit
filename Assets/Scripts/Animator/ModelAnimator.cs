@@ -14,6 +14,7 @@
 
 using Mediapipe;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class ModelAnimator : MonoBehaviour {
   private Animator _anim;
@@ -115,12 +116,17 @@ public class ModelAnimator : MonoBehaviour {
   // Get the normal to a triangle from the three corner points, a, b and c.
   // See https://docs.unity3d.com/ScriptReference/Vector3.Cross.html.
   // </summary>
+  // <exception cref="Assertions.AssertionException">
+  // An assertion is thrown if the sides from input vectors are parallel.
+  // </exception>
   private Vector3 GetNormal(Vector3 a, Vector3 b, Vector3 c) {
     // Find vectors corresponding to two of the sides of the triangle.
     Vector3 side1 = b - a;
     Vector3 side2 = c - a;
 
     // Cross the vectors to get a perpendicular vector, then normalize it.
-    return Vector3.Cross(side1, side2).normalized;
+    Vector3 result = Vector3.Cross(side1, side2).normalized;
+    Assert.AreNotEqual(Vector3.zero, result, "The sides from input vectors are parallel.");
+    return result;
   }
 }
