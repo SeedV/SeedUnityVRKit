@@ -62,7 +62,7 @@ public class Joint {
   // If the forward rotation is set, it would be used to adjust so that the joint will face to
   // its child joint.
   // </summary>
-  public void SetRotation(Vector3 forward, Vector3 up) {
-    SetRotation(Quaternion.LookRotation(forward, up));
+  public void SetRotation(Vector3 lookAt, Vector3 upwards) {
+    SetRotation(Quaternion.LookRotation(lookAt, upwards));
   }
 }
