@@ -31,8 +31,6 @@ public class Joint {
   public Joint Child;
   public Joint Parent;
 
-  public Vector3 Now3D;
-
   // <summary>
   // The initial placement in the scene.
   // </summary>

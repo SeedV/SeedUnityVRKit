@@ -106,58 +106,9 @@ public class ModelAnimator : MonoBehaviour {
   }
 
   public void Update() {
-    var forward = GetNormal(_joints[Landmarks.LeftShoulder].Now3D, _joints[Landmarks.LeftHip].Now3D, _joints[Landmarks.RightHip].Now3D);
-    _joints[Landmarks.Hip].SetRotation(Quaternion.LookRotation(forward));
-
-    // rotate each of bones
-    foreach (var jointPoint in _joints) {
-      if (jointPoint == null) {
-        continue;
-      }
-      if (jointPoint.Parent != null) {
-        var fv = jointPoint.Parent.Now3D - jointPoint.Now3D;
-        if (fv != Vector3.zero) {
-          jointPoint.SetRotation(Quaternion.LookRotation(jointPoint.Now3D - jointPoint.Child.Now3D, fv));
-        }
-      } else if (jointPoint.Child != null) {
-        if (forward != Vector3.zero) {
-          jointPoint.SetRotation(Quaternion.LookRotation(jointPoint.Now3D - jointPoint.Child.Now3D, forward));
-        }
-      }
-    }
-
-    // Head Rotation
-    var gaze = _joints[Landmarks.Nose].Now3D - _joints[Landmarks.Head].Now3D;
-    var f = GetNormal(_joints[Landmarks.Nose].Now3D, _joints[Landmarks.RightEar].Now3D, _joints[Landmarks.LeftEar].Now3D);
-    var head = _joints[Landmarks.Head];
-    head.SetRotation(Quaternion.LookRotation(gaze, f));
   }
 
   public void SetPoseLandmarks(NormalizedLandmarkList poseLandmarks) {
-    for (int i = 0; i < Landmarks.PoseCount; i++) {
-      var landmark = poseLandmarks.Landmark[i];
-      if (_joints[i] != null) {
-        _joints[i].Now3D = new Vector3(-landmark.X * 150, landmark.Y * 150, landmark.Z * 50);
-      }
-    }
-    PredictPose();
-  }
-
-  private void PredictPose() {
-    var midHip = Vector3.Lerp(_joints[Landmarks.LeftHip].Now3D, _joints[Landmarks.RightHip].Now3D, 0.5f);
-    var midShoulder =
-        Vector3.Lerp(_joints[Landmarks.LeftShoulder].Now3D, _joints[Landmarks.RightShoulder].Now3D, 0.5f);
-
-    _joints[Landmarks.Spine].Now3D = Vector3.Lerp(midHip, midShoulder, 0.8f);
-    _joints[Landmarks.Hip].Now3D = Vector3.Lerp(_joints[Landmarks.Spine].Now3D, midHip, 0.5f);
-    _joints[Landmarks.Neck].Now3D = midShoulder;
-
-    // Calculate head location
-    var midEar = Vector3.Lerp(_joints[Landmarks.RightEar].Now3D, _joints[Landmarks.LeftEar].Now3D, 0.5f);
-    var hv = midEar - midShoulder;
-    var nhv = Vector3.Normalize(hv);
-    var nv = _joints[Landmarks.Nose].Now3D - midShoulder;
-    _joints[Landmarks.Head].Now3D = midShoulder + nhv * Vector3.Dot(nhv, nv);
   }
 
   // <summary>
