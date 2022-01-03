@@ -17,10 +17,11 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 public class ModelAnimator : MonoBehaviour {
+  public float Width = 150;
+  public float Height = 150;
   private Animator _anim;
   private Joint[] _joints = new Joint[Landmarks.Total];
   [SerializeField] private Transform _nose;
-  [SerializeField] private float _width = 150;
   [SerializeField] private float _zScale = 0.3f;
 
   // <summary>
@@ -148,7 +149,9 @@ public class ModelAnimator : MonoBehaviour {
       if (_joints[i] != null) {
         // Apply a z-scale since the BlazePose model doesn't generate good z-axis estimates.
         // Multiple a width since the landmark coordinates are normalized to [0, 1].
-        _joints[i].Prediction = new Vector3(-landmark.X, landmark.Y, landmark.Z * _zScale) * _width;
+        _joints[i].Prediction = new Vector3(-landmark.X * Width,
+                                            landmark.Y * Height,
+                                            landmark.Z * _zScale * Width);
       }
     }
     UpdateSpecialJoints();
