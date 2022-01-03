@@ -32,6 +32,14 @@ public class Joint {
   public Joint Parent;
 
   // <summary>
+  // The prediction by ML models. It is used by the animator to determine the rotations of
+  // the joints during Update.
+  //
+  // Different from position vector, this is in the same scale but different coordination.
+  // </summary>
+  public Vector3 Prediction { get; set; }
+
+  // <summary>
   // The initial placement in the scene.
   // </summary>
   private readonly Quaternion _initRotation;

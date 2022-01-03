@@ -64,6 +64,8 @@ public class PoseTracker : MonoBehaviour {
     _graphRunner.StartRunAsync(sidePacket).AssertOk();
     Logger.LogInfo(_TAG, "Graph Runner started in async mode!");
 
+    _modelAnimator.Width = _sourceTexture.width;
+    _modelAnimator.Height = _sourceTexture.height;
     _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
     _coroutine = StartCoroutine(ProcessImage(_sourceTexture));
   }
