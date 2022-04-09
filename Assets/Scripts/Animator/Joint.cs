@@ -37,7 +37,15 @@ public class Joint {
   //
   // Different from position vector, this is in the same scale but different coordination.
   // </summary>
-  public Vector3 Prediction { get; set; }
+  public Vector3 Prediction { 
+    // get; set;
+    get {
+      return _prediction;
+    }
+    set {
+      _prediction = _kalmanFilter.Update(value);
+    }
+  }
 
   // <summary>
   // The initial placement in the scene.
@@ -48,6 +56,16 @@ public class Joint {
   // The transform target.
   // </summary>
   private readonly Transform _target;
+
+  // <summary>
+  // The predicted location of the joint.
+  // </summary>
+  private Vector3 _prediction;
+
+  // <summary>
+  // The kalman filter for ML detection model.
+  // </summary>
+  private KalmanFilter _kalmanFilter = new KalmanFilter(0.125f, 1f);
 
   public Joint(Transform target) {
     _target = target;
