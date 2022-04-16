@@ -411,7 +411,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2b3148109544e4fe7a282badc6b1401c, type: 2}
+  - {fileID: 2100000, guid: bdce5c0f2bcc84f7fa885dcc5a5c7567, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -584,9 +584,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d07b3e73c0043d49519e6af864d813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputMode: 0
+  _inputMode: 1
   _videoTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
-  _videoClip: {fileID: 32900000, guid: 9dc390bff248c4a95af357fd1af8e520, type: 3}
+  _videoClip: {fileID: 32900000, guid: cd1b044b384f748ff8620bf24fdc7ac0, type: 3}
   _webcamPretab: {fileID: 6527068323877630318, guid: 245c7e4b7d98c4f23808723f1bf94888, type: 3}
   _videoPretab: {fileID: 5786134226875416918, guid: ce18ef9a1021c471b8c289373c7c7129, type: 3}
 --- !u!1 &1079145209 stripped
@@ -606,7 +606,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 193ccb09268ab4fbb8e0226f893dc98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Width: 150
+  Height: 150
   _nose: {fileID: 399786049}
+  _zScale: 0.3
 --- !u!1001 &1149347820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -840,7 +843,7 @@ GameObject:
   - component: {fileID: 1598526623}
   - component: {fileID: 1598526622}
   - component: {fileID: 1598526621}
-  - component: {fileID: 1598526624}
+  - component: {fileID: 1598526625}
   m_Layer: 0
   m_Name: PoseTracker
   m_TagString: Untagged
@@ -873,6 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d510d7cb514d494cafe02e25a75ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runningMode: 0
   _preferableInferenceMode: 1
   _textureFramePool: {fileID: 1598526621}
   _sourceTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
@@ -897,7 +901,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1598526624
+--- !u!114 &1598526625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -906,24 +910,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1598526620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6495aaa3e64c7704eaf5b10bd0cb6946, type: 3}
+  m_Script: {fileID: 11500000, guid: 326e6292d21184e3384c9de6a8abe56a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cpuConfig: {fileID: 4900000, guid: 5199c62ac0186dac28358b2ef639ef9b, type: 3}
-  _gpuConfig: {fileID: 4900000, guid: 4711c9f7a612c310c844a312f6ec21c6, type: 3}
-  _openGlEsConfig: {fileID: 4900000, guid: 8256a93f04d3d43118702a0ec0cc93a1, type: 3}
-  _timeoutMicrosec: 50000
-  modelComplexity: 1
+  _cpuConfig: {fileID: 4900000, guid: a901443779a96c97890cab1b274b506f, type: 3}
+  _gpuConfig: {fileID: 4900000, guid: 8eaa695afee89c8eea9241f8a5ab9645, type: 3}
+  _openGlEsConfig: {fileID: 4900000, guid: 5db98b44b5bd2a0e8b5c7dec21d0577d, type: 3}
+  _timeoutMicrosec: 0
+  refineFaceLandmarks: 0
+  modelComplexity: 0
   smoothLandmarks: 1
-  OnPoseDetectionOutput:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPoseLandmarksOutput:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPoseWorldLandmarksOutput:
-    m_PersistentCalls:
-      m_Calls: []
-  OnRoiFromLandmarksOutput:
-    m_PersistentCalls:
-      m_Calls: []
