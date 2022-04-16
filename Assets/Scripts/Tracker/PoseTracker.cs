@@ -14,19 +14,20 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Logger = Mediapipe.Logger;  // Disambiguation with UnityEngine.Logger
+using Logger = Mediapipe.Unity.Logger;  // Disambiguation with UnityEngine.Logger
 using Mediapipe;
 using Mediapipe.Unity;
-using Mediapipe.Unity.PoseTracking;
+using Mediapipe.Unity.Holistic;
 using UnityEngine;
 
-[RequireComponent(typeof(PoseTrackingGraph))]
+[RequireComponent(typeof(HolisticTrackingGraph))]
 public class PoseTracker : MonoBehaviour {
   private const string _TAG = nameof(PoseTracker);
   public enum InferenceMode {
     CPU,
     GPU,
   }
+  public RunningMode runningMode;
   [SerializeField] private InferenceMode _preferableInferenceMode;
   [SerializeField] private TextureFramePool _textureFramePool;
   [SerializeField] private Texture _sourceTexture;
@@ -35,12 +36,12 @@ public class PoseTracker : MonoBehaviour {
   [SerializeField] private bool _vFlip;
   [SerializeField] private int _rotation;
   [SerializeField] private ModelAnimator _modelAnimator = null;
-  private PoseTrackingGraph _graphRunner;
+  private HolisticTrackingGraph _graphRunner;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
 
   public IEnumerator Start() {
-    _graphRunner = GetComponent<PoseTrackingGraph>();
+    _graphRunner = GetComponent<HolisticTrackingGraph>();
     AssetLoader.Provide(new StreamingAssetsResourceManager());
 
     Logger.LogInfo(_TAG, "Starting mediapipe");
@@ -49,24 +50,21 @@ public class PoseTracker : MonoBehaviour {
       Logger.LogInfo(_TAG, "Initializing GPU resources...");
       yield return GpuManager.Initialize();
     }
-    var graphInitRequest = _graphRunner.WaitForInit();
+    var graphInitRequest = _graphRunner.WaitForInit(runningMode);
+    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
     yield return graphInitRequest;
     if (graphInitRequest.isError) {
       Debug.Log(graphInitRequest.error);
       yield break;
     }
+    OnStartRun();
     Logger.LogInfo(_TAG, "Graph Runner Init!");
-    _graphRunner.OnPoseLandmarksOutput.AddListener(OnPoseLandmarksOutput);
-    SidePacket sidePacket = new SidePacket();
-    sidePacket.Emplace("input_horizontally_flipped", new BoolPacket(_hFlip));
-    sidePacket.Emplace("input_vertically_flipped", new BoolPacket(_vFlip));
-    sidePacket.Emplace("input_rotation", new IntPacket(_rotation));
-    _graphRunner.StartRunAsync(sidePacket).AssertOk();
+    SidePacket sidePacket = _graphRunner.BuildSidePacket(_rotation, _hFlip, _vFlip);
+    _graphRunner.StartRun(sidePacket);
     Logger.LogInfo(_TAG, "Graph Runner started in async mode!");
 
     _modelAnimator.Width = _sourceTexture.width;
     _modelAnimator.Height = _sourceTexture.height;
-    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
     _coroutine = StartCoroutine(ProcessImage(_sourceTexture));
   }
 
@@ -77,16 +75,18 @@ public class PoseTracker : MonoBehaviour {
   private IEnumerator ProcessImage(Texture image) {
     Logger.LogVerbose(_TAG, "Process image");
     while (true) {
-      var textureFrameRequest = _textureFramePool.WaitForNextTextureFrame();
-      yield return textureFrameRequest;
-      var textureFrame = textureFrameRequest.result;
+      if (!_textureFramePool.TryGetTextureFrame(out var textureFrame)) {
+        yield return new WaitForEndOfFrame();
+        continue;
+      }
       textureFrame.ReadTextureFromOnCPU(image);
-      _graphRunner.AddTextureFrameToInputStream(textureFrame).AssertOk();
+      _graphRunner.AddTextureFrameToInputStream(textureFrame);
       yield return new WaitForEndOfFrame();
     }
   }
 
-  private void OnPoseLandmarksOutput(NormalizedLandmarkList poseLandmarks) {
+  private void OnPoseLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+    NormalizedLandmarkList poseLandmarks = eventArgs.value;
     if (_annotationController != null && poseLandmarks != null) {
       _annotationController.DrawLater(poseLandmarks);
     }
@@ -105,4 +105,10 @@ public class PoseTracker : MonoBehaviour {
     _inferenceMode = _preferableInferenceMode;
 #endif
   }
+
+  public void OnStartRun() {
+    if (!runningMode.IsSynchronous()) {
+      _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
+    }
+  }  
 }
