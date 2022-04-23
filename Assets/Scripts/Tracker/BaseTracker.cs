@@ -25,21 +25,30 @@ public abstract class BaseTracker : MonoBehaviour {
     CPU,
     GPU,
   }
+  [Tooltip("Inference mode.")]
   [SerializeField] private InferenceMode _preferableInferenceMode;
+  [Tooltip("Reference to the internal texture frame pool.")]
   [SerializeField] private TextureFramePool _textureFramePool;
   [SerializeField] private Texture _sourceTexture;
+  [Tooltip("Whether to flip the source image horizontally before processing.")]
   [SerializeField] private bool _hFlip;
+  [Tooltip("Whether to flip the source image vertically before processing.")]
   [SerializeField] private bool _vFlip;
+  [Tooltip("Angles to rotate the source image.")]
   [SerializeField] private int _rotation;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
 
+  // <summary>Creates a new graph init request. </summary>
   public abstract WaitForResult CreateGraphInitRequest();
 
+  // <summary>Runs detection with given rotation, horizonal and vertical flips. </summary>
   public abstract void StartGraph(int rotation, bool hFlip, bool vFlip);
 
+  // <summary>Attaches any event handler for callbacks. </summary>
   public abstract void AddEventHandler();
 
+  // <summary>Send the current TextureFrame to the running graph. </summary>
   public abstract void ProcessTextureFrame(TextureFrame textureFrame);
 
   public virtual IEnumerator Start() {
