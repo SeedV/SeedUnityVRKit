@@ -14,14 +14,14 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Mediapipe;
 using Mediapipe.Unity;
+using UnityEngine;
 
 // <summary>An animator to visualizer upper body and face.</summary>
 public class UpperBodyAnimator : MonoBehaviour {
   [Tooltip("Reference to MTH_DEF game object in UnityChan model.")]
-  public SkinnedMeshRenderer ref_SMR_MTH_DEF;
+  public SkinnedMeshRenderer MthDefRef;
   // <summary>The last detection of face landmarks, set by OnFaceLandmarksOutput.</summary>
   private NormalizedLandmarkList _faceLandmarks;
   // <summary>The computed mouth aspect ratio.</summary>
@@ -42,10 +42,11 @@ public class UpperBodyAnimator : MonoBehaviour {
   }
 
   private void SetMouth(float ratio) {
-    ref_SMR_MTH_DEF.SetBlendShapeWeight(2, ratio);
+    MthDefRef.SetBlendShapeWeight(2, ratio);
   }
 
-  public void OnFaceLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  public void OnFaceLandmarksOutput(object stream,
+                                    OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     _faceLandmarks = eventArgs.value;
   }
 
