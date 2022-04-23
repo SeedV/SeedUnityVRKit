@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Logger = Mediapipe.Unity.Logger;  // Disambiguation with UnityEngine.Logger
 using Mediapipe;
 using Mediapipe.Unity;
+using Mediapipe.Unity.Holistic;
 using UnityEngine;
 
 public abstract class BaseTracker : MonoBehaviour {
@@ -36,22 +37,15 @@ public abstract class BaseTracker : MonoBehaviour {
   [SerializeField] private bool _vFlip;
   [Tooltip("Angles to rotate the source image.")]
   [SerializeField] private int _rotation;
+  protected HolisticTrackingGraph _graphRunner;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
-
-  // <summary>Creates a new graph init request. </summary>
-  public abstract WaitForResult CreateGraphInitRequest();
-
-  // <summary>Runs detection with given rotation, horizonal and vertical flips. </summary>
-  public abstract void StartGraph(int rotation, bool hFlip, bool vFlip);
 
   // <summary>Attaches any event handler for callbacks. </summary>
   public abstract void AddEventHandler();
 
-  // <summary>Send the current TextureFrame to the running graph. </summary>
-  public abstract void ProcessTextureFrame(TextureFrame textureFrame);
-
-  public virtual IEnumerator Start() {
+  public IEnumerator Start() {
+    _graphRunner = GetComponent<HolisticTrackingGraph>();
     AssetLoader.Provide(new StreamingAssetsResourceManager());
 
     Logger.LogInfo(_TAG, "Starting mediapipe");
@@ -60,7 +54,7 @@ public abstract class BaseTracker : MonoBehaviour {
       Logger.LogInfo(_TAG, "Initializing GPU resources...");
       yield return GpuManager.Initialize();
     }
-    var graphInitRequest = CreateGraphInitRequest();
+    var graphInitRequest = _graphRunner.WaitForInit(RunningMode.Async);
     _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
     yield return graphInitRequest;
     if (graphInitRequest.isError) {
@@ -69,7 +63,8 @@ public abstract class BaseTracker : MonoBehaviour {
     }
     AddEventHandler();
     Logger.LogInfo(_TAG, "Graph Runner Init!");
-    StartGraph(_rotation, _hFlip, _vFlip);
+    SidePacket sidePacket = _graphRunner.BuildSidePacket(_rotation, _hFlip, _vFlip);
+    _graphRunner.StartRun(sidePacket);
     Logger.LogInfo(_TAG, "Graph Runner started in async mode!");
 
     _coroutine = StartCoroutine(ProcessImage(_sourceTexture));
@@ -87,7 +82,7 @@ public abstract class BaseTracker : MonoBehaviour {
         continue;
       }
       textureFrame.ReadTextureFromOnCPU(image);
-      ProcessTextureFrame(textureFrame);
+      _graphRunner.AddTextureFrameToInputStream(textureFrame);
       yield return new WaitForEndOfFrame();
     }
   }

@@ -23,21 +23,6 @@ public class HolisticTracker : BaseTracker {
   [SerializeField] private UpperBodyAnimator _modelAnimator = null;
 
   [SerializeField] private HolisticLandmarkListAnnotationController _holisticAnnotationController;
-  private HolisticTrackingGraph _graphRunner;
-
-  public override IEnumerator Start() {
-    _graphRunner = GetComponent<HolisticTrackingGraph>();
-    return base.Start();
-  }
-
-  public override WaitForResult CreateGraphInitRequest() {
-    return _graphRunner.WaitForInit(RunningMode.Async);
-  }
-
-  public override void StartGraph(int rotation, bool hFlip, bool vFlip) {
-    SidePacket sidePacket = _graphRunner.BuildSidePacket(rotation, hFlip, vFlip);
-    _graphRunner.StartRun(sidePacket);
-  }
 
   public override void AddEventHandler() {
     _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
@@ -45,10 +30,6 @@ public class HolisticTracker : BaseTracker {
     _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
     _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
     _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
-  }
-
-  public override void ProcessTextureFrame(TextureFrame textureFrame) {
-    _graphRunner.AddTextureFrameToInputStream(textureFrame);
   }
 
   private void OnFaceLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
