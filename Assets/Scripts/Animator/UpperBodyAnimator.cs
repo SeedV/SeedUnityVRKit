@@ -18,7 +18,7 @@ using Mediapipe;
 using Mediapipe.Unity;
 using UnityEngine;
 
-// <summary>An animator to visualizer upper body and face.</summary>
+// <summary>An animator to visualize upper body and face.</summary>
 public class UpperBodyAnimator : MonoBehaviour {
   [Tooltip("Reference to MTH_DEF game object in UnityChan model.")]
   public SkinnedMeshRenderer MthDefRef;
