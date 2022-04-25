@@ -21,7 +21,7 @@ using Mediapipe.Unity.Holistic;
 using UnityEngine;
 
 public abstract class BaseTracker : MonoBehaviour {
-  private const string _TAG = nameof(BaseTracker);
+  private const string _tag = nameof(BaseTracker);
   public enum InferenceMode {
     CPU,
     GPU,
@@ -48,24 +48,24 @@ public abstract class BaseTracker : MonoBehaviour {
     _graphRunner = GetComponent<HolisticTrackingGraph>();
     AssetLoader.Provide(new StreamingAssetsResourceManager());
 
-    Logger.LogInfo(_TAG, "Starting mediapipe");
+    Logger.LogInfo(_tag, "Starting mediapipe");
     DecideInferenceMode();
     if (_inferenceMode == InferenceMode.GPU) {
-      Logger.LogInfo(_TAG, "Initializing GPU resources...");
+      Logger.LogInfo(_tag, "Initializing GPU resources...");
       yield return GpuManager.Initialize();
     }
-    var graphInitRequest = _graphRunner.WaitForInit(RunningMode.Async);
     _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
+    var graphInitRequest = _graphRunner.WaitForInit(RunningMode.Async);
     yield return graphInitRequest;
     if (graphInitRequest.isError) {
       Debug.Log(graphInitRequest.error);
       yield break;
     }
     AddEventHandler();
-    Logger.LogInfo(_TAG, "Graph Runner Init!");
+    Logger.LogInfo(_tag, "Graph Runner Init!");
     SidePacket sidePacket = _graphRunner.BuildSidePacket(_rotation, _hFlip, _vFlip);
     _graphRunner.StartRun(sidePacket);
-    Logger.LogInfo(_TAG, "Graph Runner started in async mode!");
+    Logger.LogInfo(_tag, "Graph Runner started in async mode!");
 
     _coroutine = StartCoroutine(ProcessImage(_sourceTexture));
   }
@@ -75,7 +75,7 @@ public abstract class BaseTracker : MonoBehaviour {
   }
 
   private IEnumerator ProcessImage(Texture image) {
-    Logger.LogVerbose(_TAG, "Process image");
+    Logger.LogVerbose(_tag, "Process image");
     while (true) {
       if (!_textureFramePool.TryGetTextureFrame(out var textureFrame)) {
         yield return new WaitForEndOfFrame();
@@ -83,7 +83,7 @@ public abstract class BaseTracker : MonoBehaviour {
       }
       textureFrame.ReadTextureFromOnCPU(image);
       _graphRunner.AddTextureFrameToInputStream(textureFrame);
-      yield return new WaitForEndOfFrame();
+      yield return null;
     }
   }
 
