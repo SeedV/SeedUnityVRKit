@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69ac4e27202942b7b94152d18694f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ref_SMR_MTH_DEF: {fileID: 104718618}
+  MthDefRef: {fileID: 104718618}
 --- !u!1 &519042299
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,15 +329,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43c4c15dc634478c8fb6805864cdaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runningMode: 0
   _preferableInferenceMode: 0
   _textureFramePool: {fileID: 870755770}
   _sourceTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
-  _holisticAnnotationController: {fileID: 745539341}
   _hFlip: 0
   _vFlip: 0
   _rotation: 0
   _modelAnimator: {fileID: 364035617}
+  _holisticAnnotationController: {fileID: 745539341}
 --- !u!114 &870755769
 MonoBehaviour:
   m_ObjectHideFlags: 0
