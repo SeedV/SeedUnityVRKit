@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 using Mediapipe;
 using Mediapipe.Unity;
 using UnityEngine;
@@ -29,6 +32,13 @@ public class UpperBodyAnimator : MonoBehaviour {
   private float _mar = 0;
   // <summary>The computed mouth distance.</summary>
   private float _mouthDistance = 0;
+
+  [DllImport("opencvplugin")]
+  private static extern int FooTestFunction_Internal();
+
+  void Start() {
+    // Debug.Log("FooTest: " + FooTestFunction_Internal());
+  }  
 
   void LateUpdate() {
     if (_faceLandmarks != null) {
