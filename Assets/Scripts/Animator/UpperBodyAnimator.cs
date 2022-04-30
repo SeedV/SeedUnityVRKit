@@ -38,7 +38,8 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   void Start() {
     // Debug.Log("FooTest: " + FooTestFunction_Internal());
-  }  
+    Debug.Log("face_model: " + readFullModel());
+  }
 
   void LateUpdate() {
     if (_faceLandmarks != null) {
@@ -73,5 +74,15 @@ public class UpperBodyAnimator : MonoBehaviour {
     _mouthDistance = (float)(p1 - p5).magnitude;
     mar /= (float)(2 * _mouthDistance + 1e-6);
     _mar = mar;
+  }
+
+  private float[] readFullModel() {
+    TextAsset modelFile = Resources.Load<TextAsset>("face_model");
+    string[] data = modelFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+    float[] fullModel = new float[data.Length];
+    for (int i = 0; i < data.Length; i++) {
+      fullModel[i] = Convert.ToSingle(data[i]);
+    }
+    return fullModel;
   }
 }
