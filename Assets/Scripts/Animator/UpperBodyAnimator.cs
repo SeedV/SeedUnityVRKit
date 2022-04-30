@@ -33,23 +33,48 @@ public class UpperBodyAnimator : MonoBehaviour {
   // <summary>The computed mouth distance.</summary>
   private float _mouthDistance = 0;
 
+  private Transform neck;
+
   [DllImport("opencvplugin")]
-  private static extern int FooTestFunction_Internal();
+  private static extern void solvePnP(float[] objectPointsArray, float[] imagePointsArray,
+      float[] cameraMatrixArray, float[] distCoeffsArray, float[] rvec, float[] tvec);
 
   void Start() {
+    var anim = GetComponent<Animator>();
+
+    neck = anim.GetBoneTransform(HumanBodyBones.Neck);
     // Debug.Log("FooTest: " + FooTestFunction_Internal());
-    Debug.Log("face_model: " + readFullModel());
+    // Debug.Log("face_model: " + readFullModel());
   }
 
   void LateUpdate() {
     if (_faceLandmarks != null) {
       IList<Vector2> faceMesh = new List<Vector2>();
+      IList<float> pnp = new List<float>();
       foreach (var landmark in _faceLandmarks.Landmark) {
         faceMesh.Add(new Vector2(landmark.X, landmark.Y));
+        pnp.Add(landmark.X);
+        pnp.Add(landmark.Y);
       }
+      float[] pnpArray = new float[pnp.Count];
+      pnp.CopyTo(pnpArray, 0);
+      float[] rvec = new float[3];
+      solvePnP(readFullModel(), pnpArray, null, null, rvec, null);
+
+      var pitch = (float) Degree(rvec[0]);
+      var roll = (float) Degree(rvec[1]);
+      var yaw = (float) Degree(rvec[2]);
+      Debug.Log(string.Format("pitch: {0}, roll: {1}, yaw: {2}", pitch, roll, yaw));
+      neck.rotation = Quaternion.Euler(pitch, roll, yaw);
+
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
     }
+  }
+
+
+  private double Degree(double radian) {
+    return 180 / Math.PI * radian;
   }
 
   private void SetMouth(float ratio) {
