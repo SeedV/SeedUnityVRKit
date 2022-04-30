@@ -15,3 +15,4 @@ Copy the built files into [`Packages/com.github.homuler.mediapipe/Runtime/Plugin
 ```shell
 python3 build.py build --android arm64 --linkopt=-s --desktop cpu -vv
 ```
+Use `--opencv cmake` to link OpenCV statically, or `--opencv local` to link dynamically
