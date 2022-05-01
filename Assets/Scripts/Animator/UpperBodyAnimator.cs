@@ -36,10 +36,12 @@ public class UpperBodyAnimator : MonoBehaviour {
   private Transform neck;
 
   private Quaternion initQuaternion;
+  private float[] rvec = null;
 
   [DllImport("opencvplugin")]
   private static extern void solvePnP(float[] objectPointsArray, float[] imagePointsArray,
-      float[] cameraMatrixArray, float[] distCoeffsArray, float[] rvec, float[] tvec);
+      float[] cameraMatrixArray, float[] distCoeffsArray, float[] rvec, float[] tvec, 
+      bool useExtrinsicGuess);
 
   void Start() {
     var anim = GetComponent<Animator>();
@@ -61,8 +63,14 @@ public class UpperBodyAnimator : MonoBehaviour {
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
       // Debug.Log(string.Format("[{0}]", string.Join(", ", pnpArray)));
-      float[] rvec = new float[3];
-      solvePnP(readFullModel(), pnpArray, null, null, rvec, null);
+      bool useExtrinsicGuess = false;
+      if (rvec != null) {
+        useExtrinsicGuess = true;
+      } else {
+        rvec = new float[3];
+      }
+
+      solvePnP(readFullModel(), pnpArray, null, null, rvec, null, useExtrinsicGuess);
 
       var roll = (float) -Degree(rvec[0]);
       var yaw = (float) (Degree(rvec[1]) + 180);
