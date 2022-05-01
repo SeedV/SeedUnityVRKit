@@ -37,6 +37,7 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private Quaternion initQuaternion;
   private float[] rvec = null;
+  private float[] face3DPoints;
 
   [DllImport("opencvplugin")]
   private static extern void solvePnP(float[] objectPointsArray, float[] imagePointsArray,
@@ -48,6 +49,7 @@ public class UpperBodyAnimator : MonoBehaviour {
 
     neck = anim.GetBoneTransform(HumanBodyBones.Neck);
     initQuaternion = neck.rotation;
+    face3DPoints = readFace3DPoints();
   }
 
   void LateUpdate() {
@@ -68,7 +70,7 @@ public class UpperBodyAnimator : MonoBehaviour {
         rvec = new float[3];
       }
 
-      solvePnP(readFullModel(), pnpArray, null, null, rvec, null, useExtrinsicGuess);
+      solvePnP(face3DPoints, pnpArray, null, null, rvec, null, useExtrinsicGuess);
 
       var roll = (float) -Degree(rvec[0]);
       var yaw = (float) (Degree(rvec[1]) + 180);
@@ -110,13 +112,13 @@ public class UpperBodyAnimator : MonoBehaviour {
     _mar = mar;
   }
 
-  private float[] readFullModel() {
+  private static float[] readFace3DPoints() {
     TextAsset modelFile = Resources.Load<TextAsset>("face_model");
     string[] data = modelFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-    float[] fullModel = new float[data.Length];
+    float[] face3DPoints = new float[data.Length];
     for (int i = 0; i < data.Length; i++) {
-      fullModel[i] = Convert.ToSingle(data[i]);
+      face3DPoints[i] = Convert.ToSingle(data[i]);
     }
-    return fullModel;
+    return face3DPoints;
   }
 }
