@@ -35,6 +35,8 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private Transform neck;
 
+  private Quaternion initQuaternion;
+
   [DllImport("opencvplugin")]
   private static extern void solvePnP(float[] objectPointsArray, float[] imagePointsArray,
       float[] cameraMatrixArray, float[] distCoeffsArray, float[] rvec, float[] tvec);
@@ -43,14 +45,14 @@ public class UpperBodyAnimator : MonoBehaviour {
     var anim = GetComponent<Animator>();
 
     neck = anim.GetBoneTransform(HumanBodyBones.Neck);
-    // Debug.Log("FooTest: " + FooTestFunction_Internal());
-    // Debug.Log("face_model: " + readFullModel());
+    initQuaternion = neck.rotation;
   }
 
   void LateUpdate() {
     if (_faceLandmarks != null) {
       IList<Vector2> faceMesh = new List<Vector2>();
       IList<float> pnp = new List<float>();
+      // Debug.Log(_faceLandmarks.Landmark);
       foreach (var landmark in _faceLandmarks.Landmark) {
         faceMesh.Add(new Vector2(landmark.X, landmark.Y));
         pnp.Add(landmark.X);
@@ -58,14 +60,15 @@ public class UpperBodyAnimator : MonoBehaviour {
       }
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
+      // Debug.Log(string.Format("[{0}]", string.Join(", ", pnpArray)));
       float[] rvec = new float[3];
       solvePnP(readFullModel(), pnpArray, null, null, rvec, null);
 
-      var pitch = (float) Degree(rvec[0]);
-      var roll = (float) Degree(rvec[1]);
-      var yaw = (float) Degree(rvec[2]);
-      Debug.Log(string.Format("pitch: {0}, roll: {1}, yaw: {2}", pitch, roll, yaw));
-      neck.rotation = Quaternion.Euler(pitch, roll, yaw);
+      var roll = (float) -Degree(rvec[0]);
+      var yaw = (float) (Degree(rvec[1]) + 180);
+      var pitch = (float) Degree(rvec[2]);
+      Debug.Log(string.Format("roll: {0}, pitch: {1}, yaw: {2}", roll, pitch, yaw));
+      neck.rotation = Quaternion.Euler(pitch, yaw, roll) * initQuaternion;
 
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
