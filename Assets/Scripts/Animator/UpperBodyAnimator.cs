@@ -63,10 +63,8 @@ public class UpperBodyAnimator : MonoBehaviour {
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
       // Debug.Log(string.Format("[{0}]", string.Join(", ", pnpArray)));
-      bool useExtrinsicGuess = false;
-      if (rvec != null) {
-        useExtrinsicGuess = true;
-      } else {
+      bool useExtrinsicGuess = (rvec != null);
+      if (rvec == null) {
         rvec = new float[3];
       }
 
