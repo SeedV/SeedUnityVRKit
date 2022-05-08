@@ -20,11 +20,16 @@ using System.Runtime.InteropServices;
 using Mediapipe;
 using Mediapipe.Unity;
 using UnityEngine;
+using Color = UnityEngine.Color;
 
 // <summary>An animator to visualize upper body and face.</summary>
 public class UpperBodyAnimator : MonoBehaviour {
   [Tooltip("Reference to MTH_DEF game object in UnityChan model.")]
   public SkinnedMeshRenderer MthDefRef;
+  [Range(0, 45f)]
+  public float MaxRotationThreshold = 40f;
+  public float ScreenWidth = 1920;
+  public float ScreenHeight = 1080;
   // <summary>The last detection of face landmarks, set by OnFaceLandmarksOutput.</summary>
   private NormalizedLandmarkList _faceLandmarks;
   // <summary>The computed mouth aspect ratio.</summary>
@@ -37,11 +42,14 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private Quaternion initQuaternion;
   private float[] rvec = null;
+  private float[] tvec = new float[3];
   private float[] face3DPoints;
 
   [DllImport("opencvplugin")]
-  private static extern void solvePnP(float[] objectPointsArray, float[] imagePointsArray,
-      float[] cameraMatrixArray, float[] distCoeffsArray, float[] rvec, float[] tvec, 
+  private static extern void solvePnP(float width, float height, 
+      float[] objectPointsArray, float[] imagePointsArray,
+      float[] cameraMatrixArray, float[] distCoeffsArray,
+      float[] rvec, float[] tvec, 
       bool useExtrinsicGuess);
 
   void Start() {
@@ -56,7 +64,6 @@ public class UpperBodyAnimator : MonoBehaviour {
     if (_faceLandmarks != null) {
       IList<Vector2> faceMesh = new List<Vector2>();
       IList<float> pnp = new List<float>();
-      // Debug.Log(_faceLandmarks.Landmark);
       foreach (var landmark in _faceLandmarks.Landmark) {
         faceMesh.Add(new Vector2(landmark.X, landmark.Y));
         pnp.Add(landmark.X);
@@ -64,25 +71,24 @@ public class UpperBodyAnimator : MonoBehaviour {
       }
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
-      // Debug.Log(string.Format("[{0}]", string.Join(", ", pnpArray)));
       bool useExtrinsicGuess = (rvec != null);
       if (rvec == null) {
         rvec = new float[3];
       }
 
-      solvePnP(face3DPoints, pnpArray, null, null, rvec, null, useExtrinsicGuess);
+      solvePnP(ScreenWidth, ScreenHeight,
+        face3DPoints, pnpArray, null, null, rvec, tvec, useExtrinsicGuess);
+      Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", rvec[0], rvec[1], rvec[2]));
 
-      var roll = (float) -Degree(rvec[0]);
+      var roll = Mathf.Clamp((float) -Degree(rvec[0]), -MaxRotationThreshold, MaxRotationThreshold);
       var yaw = (float) (Degree(rvec[1]) + 180);
-      var pitch = (float) Degree(rvec[2]);
-      Debug.Log(string.Format("roll: {0}, pitch: {1}, yaw: {2}", roll, pitch, yaw));
+      var pitch = Mathf.Clamp((float) Degree(rvec[2]), -MaxRotationThreshold, MaxRotationThreshold);
       neck.rotation = Quaternion.Euler(pitch, yaw, roll) * initQuaternion;
 
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
     }
   }
-
 
   private double Degree(double radian) {
     return 180 / Math.PI * radian;
