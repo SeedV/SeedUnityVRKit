@@ -66,11 +66,12 @@ public class UpperBodyAnimator : MonoBehaviour {
       IList<float> pnp = new List<float>();
       foreach (var landmark in _faceLandmarks.Landmark) {
         faceMesh.Add(new Vector2(landmark.X, landmark.Y));
-        pnp.Add(landmark.X);
-        pnp.Add(landmark.Y);
+        pnp.Add(landmark.X * ScreenWidth);
+        pnp.Add(landmark.Y * ScreenHeight);
       }
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
+      Debug.Log(string.Format("0: {0}, 1: {1}", pnpArray[0], pnpArray[1]));
       bool useExtrinsicGuess = (rvec != null);
       if (rvec == null) {
         rvec = new float[3];
@@ -78,20 +79,22 @@ public class UpperBodyAnimator : MonoBehaviour {
 
       solvePnP(ScreenWidth, ScreenHeight,
         face3DPoints, pnpArray, null, null, rvec, tvec, useExtrinsicGuess);
-      Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", rvec[0], rvec[1], rvec[2]));
+      // Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", rvec[0], rvec[1], rvec[2]));
 
       var roll = Mathf.Clamp((float) -Degree(rvec[0]), -MaxRotationThreshold, MaxRotationThreshold);
       var yaw = (float) (Degree(rvec[1]) + 180);
       var pitch = Mathf.Clamp((float) Degree(rvec[2]), -MaxRotationThreshold, MaxRotationThreshold);
       neck.rotation = Quaternion.Euler(pitch, yaw, roll) * initQuaternion;
 
+      // Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", pitch, roll, yaw));
+
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
     }
   }
 
-  private double Degree(double radian) {
-    return 180 / Math.PI * radian;
+  private float Degree(float radian) {
+    return 180.0f / (float) Math.PI * radian;
   }
 
   private void SetMouth(float ratio) {
