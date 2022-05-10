@@ -14,7 +14,7 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: '.'
-        exclude: './third_party ./external'
+        exclude: './Packages'
         extensions: 'cs'
         clangFormatVersion: 12
         style: google
