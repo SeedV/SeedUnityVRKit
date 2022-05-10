@@ -55,10 +55,10 @@ public class UpperBodyAnimator : MonoBehaviour {
   private float[] _face3DPoints;
 
   [DllImport("opencvplugin")]
-  private static extern void solvePnP(float width, float height, 
+  private static extern void solvePnP(float width, float height,
       float[] objectPointsArray, float[] imagePointsArray,
       float[] cameraMatrixArray, float[] distCoeffsArray,
-      float[] rvec, float[] tvec, 
+      float[] rvec, float[] tvec,
       bool useExtrinsicGuess);
 
   void Start() {
@@ -80,7 +80,6 @@ public class UpperBodyAnimator : MonoBehaviour {
       }
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
-      Debug.Log(string.Format("0: {0}, 1: {1}", pnpArray[0], pnpArray[1]));
       bool useExtrinsicGuess = (_rotationVector != null);
       if (_rotationVector == null) {
         _rotationVector = new float[3];
@@ -90,10 +89,10 @@ public class UpperBodyAnimator : MonoBehaviour {
                _translationVector, useExtrinsicGuess);
 
       var roll = Mathf.Clamp(
-          (float) -Degree(_rotationVector[0]), -MaxRotationThreshold, MaxRotationThreshold);
-      var yaw = (float) (Degree(_rotationVector[1]) + 180);
+          (float)-Degree(_rotationVector[0]), -MaxRotationThreshold, MaxRotationThreshold);
+      var yaw = (float)(Degree(_rotationVector[1]) + 180);
       var pitch = Mathf.Clamp(
-          (float) Degree(_rotationVector[2]), -MaxRotationThreshold, MaxRotationThreshold);
+          (float)Degree(_rotationVector[2]), -MaxRotationThreshold, MaxRotationThreshold);
       _neck.rotation = Quaternion.Euler(pitch, yaw, roll) * _initQuaternion;
 
       ComputeMouth(faceMesh);
@@ -102,7 +101,7 @@ public class UpperBodyAnimator : MonoBehaviour {
   }
 
   private float Degree(float radian) {
-    return 180.0f / (float) Math.PI * radian;
+    return 180.0f / (float)Math.PI * radian;
   }
 
   private void SetMouth(float ratio) {
@@ -131,7 +130,7 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private static float[] readFace3DPoints() {
     TextAsset modelFile = Resources.Load<TextAsset>("face_model");
-    string[] data = modelFile.text.Split(new char[] { '\n', '\r' }, 
+    string[] data = modelFile.text.Split(new char[] { '\n', '\r' },
                                          StringSplitOptions.RemoveEmptyEntries);
     float[] _face3DPoints = new float[data.Length];
     for (int i = 0; i < data.Length; i++) {
