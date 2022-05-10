@@ -26,23 +26,32 @@ using Color = UnityEngine.Color;
 public class UpperBodyAnimator : MonoBehaviour {
   [Tooltip("Reference to MTH_DEF game object in UnityChan model.")]
   public SkinnedMeshRenderer MthDefRef;
+  [Tooltip("Max rotation angle in degree.")]
   [Range(0, 45f)]
   public float MaxRotationThreshold = 40f;
+  [Tooltip("Screen width used as to scale the recognized normalized landmarks.")]
   public float ScreenWidth = 1920;
+  [Tooltip("Screen height used as to scale the recognized normalized landmarks.")]
   public float ScreenHeight = 1080;
-  // <summary>The last detection of face landmarks, set by OnFaceLandmarksOutput.</summary>
+  /// <summary>The last detection of face landmarks, set by OnFaceLandmarksOutput.</summary>
   private NormalizedLandmarkList _faceLandmarks;
-  // <summary>The computed mouth aspect ratio.</summary>
+  /// <summary>The computed mouth aspect ratio.</summary>
   [Range(0.0f, 1.0f)]
   private float _mar = 0;
-  // <summary>The computed mouth distance.</summary>
+  /// <summary>The computed mouth distance.</summary>
   private float _mouthDistance = 0;
-
+  /// <summary>The neck joint to control head rotation.</summary>
   private Transform neck;
-
+  /// <summary>The init quaternion of the model facing front.</summary>
   private Quaternion initQuaternion;
+  /// <summary>The rotation vector for SolvePnP.</summary>
   private float[] rvec = null;
+  /// <summary>The translation vector for SolvePnP.</summary>
   private float[] tvec = new float[3];
+  /// <summary>
+  /// Canonical face model from
+  /// https://github.com/google/mediapipe/blob/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
+  /// </summary>
   private float[] face3DPoints;
 
   [DllImport("opencvplugin")]
@@ -79,14 +88,11 @@ public class UpperBodyAnimator : MonoBehaviour {
 
       solvePnP(ScreenWidth, ScreenHeight,
         face3DPoints, pnpArray, null, null, rvec, tvec, useExtrinsicGuess);
-      // Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", rvec[0], rvec[1], rvec[2]));
 
       var roll = Mathf.Clamp((float) -Degree(rvec[0]), -MaxRotationThreshold, MaxRotationThreshold);
       var yaw = (float) (Degree(rvec[1]) + 180);
       var pitch = Mathf.Clamp((float) Degree(rvec[2]), -MaxRotationThreshold, MaxRotationThreshold);
       neck.rotation = Quaternion.Euler(pitch, yaw, roll) * initQuaternion;
-
-      // Debug.Log(string.Format("p: {0}, r: {1}, y: {2}", pitch, roll, yaw));
 
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
