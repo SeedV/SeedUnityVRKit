@@ -41,18 +41,18 @@ public class UpperBodyAnimator : MonoBehaviour {
   /// <summary>The computed mouth distance.</summary>
   private float _mouthDistance = 0;
   /// <summary>The neck joint to control head rotation.</summary>
-  private Transform neck;
+  private Transform _neck;
   /// <summary>The init quaternion of the model facing front.</summary>
-  private Quaternion initQuaternion;
+  private Quaternion _initQuaternion;
   /// <summary>The rotation vector for SolvePnP.</summary>
-  private float[] rvec = null;
+  private float[] _rotationVector = null;
   /// <summary>The translation vector for SolvePnP.</summary>
-  private float[] tvec = new float[3];
+  private float[] _translationVector = new float[3];
   /// <summary>
   /// Canonical face model from
   /// https://github.com/google/mediapipe/blob/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
   /// </summary>
-  private float[] face3DPoints;
+  private float[] _face3DPoints;
 
   [DllImport("opencvplugin")]
   private static extern void solvePnP(float width, float height, 
@@ -64,9 +64,9 @@ public class UpperBodyAnimator : MonoBehaviour {
   void Start() {
     var anim = GetComponent<Animator>();
 
-    neck = anim.GetBoneTransform(HumanBodyBones.Neck);
-    initQuaternion = neck.rotation;
-    face3DPoints = readFace3DPoints();
+    _neck = anim.GetBoneTransform(HumanBodyBones.Neck);
+    _initQuaternion = _neck.rotation;
+    _face3DPoints = readFace3DPoints();
   }
 
   void LateUpdate() {
@@ -81,18 +81,20 @@ public class UpperBodyAnimator : MonoBehaviour {
       float[] pnpArray = new float[pnp.Count];
       pnp.CopyTo(pnpArray, 0);
       Debug.Log(string.Format("0: {0}, 1: {1}", pnpArray[0], pnpArray[1]));
-      bool useExtrinsicGuess = (rvec != null);
-      if (rvec == null) {
-        rvec = new float[3];
+      bool useExtrinsicGuess = (_rotationVector != null);
+      if (_rotationVector == null) {
+        _rotationVector = new float[3];
       }
 
-      solvePnP(ScreenWidth, ScreenHeight,
-        face3DPoints, pnpArray, null, null, rvec, tvec, useExtrinsicGuess);
+      solvePnP(ScreenWidth, ScreenHeight, _face3DPoints, pnpArray, null, null, _rotationVector,
+               _translationVector, useExtrinsicGuess);
 
-      var roll = Mathf.Clamp((float) -Degree(rvec[0]), -MaxRotationThreshold, MaxRotationThreshold);
-      var yaw = (float) (Degree(rvec[1]) + 180);
-      var pitch = Mathf.Clamp((float) Degree(rvec[2]), -MaxRotationThreshold, MaxRotationThreshold);
-      neck.rotation = Quaternion.Euler(pitch, yaw, roll) * initQuaternion;
+      var roll = Mathf.Clamp(
+          (float) -Degree(_rotationVector[0]), -MaxRotationThreshold, MaxRotationThreshold);
+      var yaw = (float) (Degree(_rotationVector[1]) + 180);
+      var pitch = Mathf.Clamp(
+          (float) Degree(_rotationVector[2]), -MaxRotationThreshold, MaxRotationThreshold);
+      _neck.rotation = Quaternion.Euler(pitch, yaw, roll) * _initQuaternion;
 
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
@@ -129,11 +131,12 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private static float[] readFace3DPoints() {
     TextAsset modelFile = Resources.Load<TextAsset>("face_model");
-    string[] data = modelFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-    float[] face3DPoints = new float[data.Length];
+    string[] data = modelFile.text.Split(new char[] { '\n', '\r' }, 
+                                         StringSplitOptions.RemoveEmptyEntries);
+    float[] _face3DPoints = new float[data.Length];
     for (int i = 0; i < data.Length; i++) {
-      face3DPoints[i] = Convert.ToSingle(data[i]);
+      _face3DPoints[i] = Convert.ToSingle(data[i]);
     }
-    return face3DPoints;
+    return _face3DPoints;
   }
 }
