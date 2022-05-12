@@ -1,2 +1,2 @@
 # Contains import code from homuler/MediaPipeUnityPlugin project
-Assets/Scripts/Mediapipe/*
+Assets/Scripts/Mediapipe/.*
