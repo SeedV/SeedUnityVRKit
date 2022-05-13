@@ -20,9 +20,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(HolisticTrackingGraph))]
 public class HolisticTracker : BaseTracker {
-  [SerializeField] private UpperBodyAnimator _modelAnimator = null;
+  [SerializeField]
+  private UpperBodyAnimator _modelAnimator = null;
 
-  [SerializeField] private HolisticLandmarkListAnnotationController _holisticAnnotationController;
+  [SerializeField]
+  private HolisticLandmarkListAnnotationController _holisticAnnotationController;
 
   public override void AddEventHandler() {
     _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
@@ -32,19 +34,23 @@ public class HolisticTracker : BaseTracker {
     _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
   }
 
-  private void OnFaceLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  private void OnFaceLandmarksOutput(object stream,
+                                     OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     _holisticAnnotationController.DrawFaceLandmarkListLater(eventArgs.value);
   }
 
-  private void OnPoseLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  private void OnPoseLandmarksOutput(object stream,
+                                     OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
   }
 
-  private void OnLeftHandLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  private void OnLeftHandLandmarksOutput(object stream,
+                                         OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
   }
 
-  private void OnRightHandLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  private void OnRightHandLandmarksOutput(object stream,
+                                          OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
   }
 }

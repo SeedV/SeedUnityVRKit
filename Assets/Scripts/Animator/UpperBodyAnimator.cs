@@ -55,11 +55,10 @@ public class UpperBodyAnimator : MonoBehaviour {
   private float[] _face3DPoints;
 
   [DllImport("opencvplugin")]
-  private static extern void solvePnP(float width, float height,
-      float[] objectPointsArray, float[] imagePointsArray,
-      float[] cameraMatrixArray, float[] distCoeffsArray,
-      float[] rvec, float[] tvec,
-      bool useExtrinsicGuess);
+  private static extern void solvePnP(float width, float height, float[] objectPointsArray,
+                                      float[] imagePointsArray, float[] cameraMatrixArray,
+                                      float[] distCoeffsArray, float[] rvec, float[] tvec,
+                                      bool useExtrinsicGuess);
 
   void Start() {
     var anim = GetComponent<Animator>();
@@ -88,11 +87,11 @@ public class UpperBodyAnimator : MonoBehaviour {
       solvePnP(ScreenWidth, ScreenHeight, _face3DPoints, pnpArray, null, null, _rotationVector,
                _translationVector, useExtrinsicGuess);
 
-      var roll = Mathf.Clamp(
-          (float)-Degree(_rotationVector[0]), -MaxRotationThreshold, MaxRotationThreshold);
+      var roll = Mathf.Clamp((float)-Degree(_rotationVector[0]), -MaxRotationThreshold,
+                             MaxRotationThreshold);
       var yaw = (float)(Degree(_rotationVector[1]) + 180);
-      var pitch = Mathf.Clamp(
-          (float)Degree(_rotationVector[2]), -MaxRotationThreshold, MaxRotationThreshold);
+      var pitch = Mathf.Clamp((float)Degree(_rotationVector[2]), -MaxRotationThreshold,
+                              MaxRotationThreshold);
       _neck.rotation = Quaternion.Euler(pitch, yaw, roll) * _initQuaternion;
 
       ComputeMouth(faceMesh);
@@ -130,8 +129,8 @@ public class UpperBodyAnimator : MonoBehaviour {
 
   private static float[] readFace3DPoints() {
     TextAsset modelFile = Resources.Load<TextAsset>("face_model");
-    string[] data = modelFile.text.Split(new char[] { '\n', '\r' },
-                                         StringSplitOptions.RemoveEmptyEntries);
+    string[] data =
+        modelFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
     float[] _face3DPoints = new float[data.Length];
     for (int i = 0; i < data.Length; i++) {
       _face3DPoints[i] = Convert.ToSingle(data[i]);

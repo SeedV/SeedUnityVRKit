@@ -27,16 +27,22 @@ public abstract class BaseTracker : MonoBehaviour {
     GPU,
   }
   [Tooltip("Inference mode.")]
-  [SerializeField] private InferenceMode _preferableInferenceMode;
+  [SerializeField]
+  private InferenceMode _preferableInferenceMode;
   [Tooltip("Reference to the internal texture frame pool.")]
-  [SerializeField] private TextureFramePool _textureFramePool;
-  [SerializeField] private Texture _sourceTexture;
+  [SerializeField]
+  private TextureFramePool _textureFramePool;
+  [SerializeField]
+  private Texture _sourceTexture;
   [Tooltip("Whether to flip the source image horizontally before processing.")]
-  [SerializeField] private bool _hFlip;
+  [SerializeField]
+  private bool _hFlip;
   [Tooltip("Whether to flip the source image vertically before processing.")]
-  [SerializeField] private bool _vFlip;
+  [SerializeField]
+  private bool _vFlip;
   [Tooltip("Angles to rotate the source image.")]
-  [SerializeField] private int _rotation;
+  [SerializeField]
+  private int _rotation;
   protected HolisticTrackingGraph _graphRunner;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
@@ -54,7 +60,8 @@ public abstract class BaseTracker : MonoBehaviour {
       Logger.LogInfo(_tag, "Initializing GPU resources...");
       yield return GpuManager.Initialize();
     }
-    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
+    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height,
+                                    TextureFormat.RGBA32);
     var graphInitRequest = _graphRunner.WaitForInit(RunningMode.Async);
     yield return graphInitRequest;
     if (graphInitRequest.isError) {
@@ -71,7 +78,8 @@ public abstract class BaseTracker : MonoBehaviour {
   }
 
   public void OnDestroy() {
-    if (_coroutine != null) StopCoroutine(_coroutine);
+    if (_coroutine != null)
+      StopCoroutine(_coroutine);
   }
 
   private IEnumerator ProcessImage(Texture image) {
@@ -89,10 +97,11 @@ public abstract class BaseTracker : MonoBehaviour {
 
   private void DecideInferenceMode() {
 #if UNITY_EDITOR_OSX || UNITY_EDITOR_WIN
-      if (_preferableInferenceMode == InferenceMode.GPU) {
-        Debug.Log("Current platform does not support GPU inference mode, so falling back to CPU mode");
-      }
-      _inferenceMode = InferenceMode.CPU;
+    if (_preferableInferenceMode == InferenceMode.GPU) {
+      Debug.Log(
+          "Current platform does not support GPU inference mode, so falling back to CPU mode");
+    }
+    _inferenceMode = InferenceMode.CPU;
 #else
     _inferenceMode = _preferableInferenceMode;
 #endif

@@ -15,7 +15,6 @@
 using UnityEngine;
 
 public class Joint {
-
   // <summary>
   // When set, the current joint will act as a hinge with only two directions of freedom.
   // It will always face towards its child bone.
@@ -37,7 +36,7 @@ public class Joint {
   //
   // Different from position vector, this is in the same scale but different coordination.
   // </summary>
-  public Vector3 Prediction { 
+  public Vector3 Prediction {
     // get; set;
     get {
       return _prediction;
