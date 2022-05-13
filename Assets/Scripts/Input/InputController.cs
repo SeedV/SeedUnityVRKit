@@ -22,15 +22,22 @@ public class InputController : MonoBehaviour {
   public enum InputMode {
     Video,
     Webcam,
-  };
+  }
 
-  [SerializeField] private InputMode _inputMode;
+  [SerializeField]
+  private InputMode _inputMode;
   // TODO: Hide this field if _inputMode isn't set to video.
-  [SerializeField] private RenderTexture _videoTexture;
+  [SerializeField]
+  private RenderTexture _videoTexture;
   // TODO: Hide this field if _inputMode isn't set to video.
-  [SerializeField] private VideoClip _videoClip;
-  [SerializeField] private GameObject _webcamPretab;
-  [SerializeField] private GameObject _videoPretab;
+  [SerializeField]
+  private VideoClip _videoClip;
+
+  [SerializeField]
+  private GameObject _webcamPretab;
+
+  [SerializeField]
+  private GameObject _videoPretab;
 
   public void Start() {
     if (_inputMode == InputMode.Video) {

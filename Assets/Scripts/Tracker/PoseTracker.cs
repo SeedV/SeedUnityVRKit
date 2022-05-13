@@ -28,14 +28,22 @@ public class PoseTracker : MonoBehaviour {
     GPU,
   }
   public RunningMode runningMode;
-  [SerializeField] private InferenceMode _preferableInferenceMode;
-  [SerializeField] private TextureFramePool _textureFramePool;
-  [SerializeField] private Texture _sourceTexture;
-  [SerializeField] private PoseLandmarkListAnnotationController _annotationController;
-  [SerializeField] private bool _hFlip;
-  [SerializeField] private bool _vFlip;
-  [SerializeField] private int _rotation;
-  [SerializeField] private ModelAnimator _modelAnimator = null;
+  [SerializeField]
+  private InferenceMode _preferableInferenceMode;
+  [SerializeField]
+  private TextureFramePool _textureFramePool;
+  [SerializeField]
+  private Texture _sourceTexture;
+  [SerializeField]
+  private PoseLandmarkListAnnotationController _annotationController;
+  [SerializeField]
+  private bool _hFlip;
+  [SerializeField]
+  private bool _vFlip;
+  [SerializeField]
+  private int _rotation;
+  [SerializeField]
+  private ModelAnimator _modelAnimator = null;
   private HolisticTrackingGraph _graphRunner;
   private Coroutine _coroutine;
   private InferenceMode _inferenceMode;
@@ -51,7 +59,8 @@ public class PoseTracker : MonoBehaviour {
       yield return GpuManager.Initialize();
     }
     var graphInitRequest = _graphRunner.WaitForInit(runningMode);
-    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height, TextureFormat.RGBA32);
+    _textureFramePool.ResizeTexture(_sourceTexture.width, _sourceTexture.height,
+                                    TextureFormat.RGBA32);
     yield return graphInitRequest;
     if (graphInitRequest.isError) {
       Debug.Log(graphInitRequest.error);
@@ -69,7 +78,8 @@ public class PoseTracker : MonoBehaviour {
   }
 
   public void OnDestroy() {
-    if (_coroutine != null) StopCoroutine(_coroutine);
+    if (_coroutine != null)
+      StopCoroutine(_coroutine);
   }
 
   private IEnumerator ProcessImage(Texture image) {
@@ -85,7 +95,8 @@ public class PoseTracker : MonoBehaviour {
     }
   }
 
-  private void OnPoseLandmarksOutput(object stream, OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+  private void OnPoseLandmarksOutput(object stream,
+                                     OutputEventArgs<NormalizedLandmarkList> eventArgs) {
     NormalizedLandmarkList poseLandmarks = eventArgs.value;
     if (_annotationController != null && poseLandmarks != null) {
       _annotationController.DrawLater(poseLandmarks);
@@ -97,10 +108,11 @@ public class PoseTracker : MonoBehaviour {
 
   private void DecideInferenceMode() {
 #if UNITY_EDITOR_OSX || UNITY_EDITOR_WIN
-      if (_preferableInferenceMode == InferenceMode.GPU) {
-        Debug.Log("Current platform does not support GPU inference mode, so falling back to CPU mode");
-      }
-      _inferenceMode = InferenceMode.CPU;
+    if (_preferableInferenceMode == InferenceMode.GPU) {
+      Debug.Log(
+          "Current platform does not support GPU inference mode, so falling back to CPU mode");
+    }
+    _inferenceMode = InferenceMode.CPU;
 #else
     _inferenceMode = _preferableInferenceMode;
 #endif
@@ -110,5 +122,5 @@ public class PoseTracker : MonoBehaviour {
     if (!runningMode.IsSynchronous()) {
       _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
     }
-  }  
+  }
 }

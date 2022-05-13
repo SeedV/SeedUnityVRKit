@@ -21,8 +21,10 @@ public class ModelAnimator : MonoBehaviour {
   public float Height = 150;
   private Animator _anim;
   private Joint[] _joints = new Joint[Landmarks.Total];
-  [SerializeField] private Transform _nose;
-  [SerializeField] private float _zScale = 0.3f;
+  [SerializeField]
+  private Transform _nose;
+  [SerializeField]
+  private float _zScale = 0.3f;
 
   // <summary>
   // Creates the joints and set Child, Parent and Forward of each joint.
@@ -31,18 +33,24 @@ public class ModelAnimator : MonoBehaviour {
     _anim = GetComponent<Animator>();
 
     // Right Arm
-    _joints[Landmarks.RightShoulder] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightUpperArm));
+    _joints[Landmarks.RightShoulder] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.RightUpperArm));
     _joints[Landmarks.RightElbow] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightLowerArm));
     _joints[Landmarks.RightWrist] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightHand));
-    _joints[Landmarks.RightThumb] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightThumbIntermediate));
-    _joints[Landmarks.RightIndex] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightMiddleProximal));
+    _joints[Landmarks.RightThumb] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.RightThumbIntermediate));
+    _joints[Landmarks.RightIndex] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.RightMiddleProximal));
 
     // Left Arm
-    _joints[Landmarks.LeftShoulder] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftUpperArm));
+    _joints[Landmarks.LeftShoulder] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftUpperArm));
     _joints[Landmarks.LeftElbow] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftLowerArm));
     _joints[Landmarks.LeftWrist] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftHand));
-    _joints[Landmarks.LeftThumb] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate));
-    _joints[Landmarks.LeftIndex] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftMiddleProximal));
+    _joints[Landmarks.LeftThumb] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate));
+    _joints[Landmarks.LeftIndex] =
+        new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftMiddleProximal));
 
     // Face
     _joints[Landmarks.LeftEar] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Head));
@@ -97,7 +105,9 @@ public class ModelAnimator : MonoBehaviour {
     _joints[Landmarks.Neck].Child = _joints[Landmarks.Head];
 
     // Set Inverse
-    Vector3 forward = GetNormal(_joints[Landmarks.LeftShoulder].position, _joints[Landmarks.LeftHip].position, _joints[Landmarks.RightHip].position);
+    Vector3 forward =
+        GetNormal(_joints[Landmarks.LeftShoulder].position, _joints[Landmarks.LeftHip].position,
+                  _joints[Landmarks.RightHip].position);
     foreach (Joint joint in _joints) {
       if (joint != null && joint.Child != null) {
         joint.Forward = Quaternion.LookRotation(joint.position - joint.Child.position, forward);
@@ -109,16 +119,16 @@ public class ModelAnimator : MonoBehaviour {
     // For Head Rotation
     Joint head = _joints[Landmarks.Head];
     Vector3 gaze = _joints[Landmarks.Nose].position - _joints[Landmarks.Head].position;
-    head.Forward = Quaternion.LookRotation(gaze);  
+    head.Forward = Quaternion.LookRotation(gaze);
   }
 
   // <summary>
   // Calls SetRotation on each joint by their Predictions.
   // </summary>
   public void Update() {
-    Vector3 forward = GetNormal(_joints[Landmarks.LeftShoulder].Prediction,
-                                _joints[Landmarks.LeftHip].Prediction,
-                                _joints[Landmarks.RightHip].Prediction);
+    Vector3 forward =
+        GetNormal(_joints[Landmarks.LeftShoulder].Prediction, _joints[Landmarks.LeftHip].Prediction,
+                  _joints[Landmarks.RightHip].Prediction);
     _joints[Landmarks.Hip].SetRotation(Quaternion.LookRotation(forward));
 
     foreach (Joint jointPoint in _joints) {
@@ -127,16 +137,15 @@ public class ModelAnimator : MonoBehaviour {
         if (jointPoint.Parent != null) {
           jointForward = jointPoint.Parent.Prediction - jointPoint.Prediction;
         }
-        jointPoint.SetRotation(
-            Quaternion.LookRotation(jointPoint.Prediction - jointPoint.Child.Prediction,
-                                    jointForward));
+        jointPoint.SetRotation(Quaternion.LookRotation(
+            jointPoint.Prediction - jointPoint.Child.Prediction, jointForward));
       }
     }
 
     Vector3 gaze = _joints[Landmarks.Nose].Prediction - _joints[Landmarks.Head].Prediction;
-    Vector3 upwards = GetNormal(_joints[Landmarks.Nose].Prediction,
-                                _joints[Landmarks.RightEar].Prediction,
-                                _joints[Landmarks.LeftEar].Prediction);
+    Vector3 upwards =
+        GetNormal(_joints[Landmarks.Nose].Prediction, _joints[Landmarks.RightEar].Prediction,
+                  _joints[Landmarks.LeftEar].Prediction);
     _joints[Landmarks.Head].SetRotation(Quaternion.LookRotation(gaze, upwards));
   }
 
@@ -149,9 +158,8 @@ public class ModelAnimator : MonoBehaviour {
       if (_joints[i] != null) {
         // Apply a z-scale since the BlazePose model doesn't generate good z-axis estimates.
         // Multiple a width since the landmark coordinates are normalized to [0, 1].
-        _joints[i].Prediction = new Vector3(-landmark.X * Width,
-                                            landmark.Y * Height,
-                                            landmark.Z * _zScale * Width);
+        _joints[i].Prediction =
+            new Vector3(-landmark.X * Width, landmark.Y * Height, landmark.Z * _zScale * Width);
       }
     }
     UpdateSpecialJoints();
@@ -163,21 +171,18 @@ public class ModelAnimator : MonoBehaviour {
   private void UpdateSpecialJoints() {
     // Hip, neck, spine and head are not directly generated by BlazePose. We use simple heuristics
     // to find a good estimate with Unity-Chan. They need adjustment for custom models.
-    _joints[Landmarks.Hip].Prediction =
-        Vector3.Lerp(_joints[Landmarks.LeftHip].Prediction,
-                     _joints[Landmarks.RightHip].Prediction, 0.5f);
+    _joints[Landmarks.Hip].Prediction = Vector3.Lerp(_joints[Landmarks.LeftHip].Prediction,
+                                                     _joints[Landmarks.RightHip].Prediction, 0.5f);
     _joints[Landmarks.Neck].Prediction =
         Vector3.Lerp(_joints[Landmarks.LeftShoulder].Prediction,
                      _joints[Landmarks.RightShoulder].Prediction, 0.5f);
     _joints[Landmarks.Spine].Prediction =
-        Vector3.Lerp(_joints[Landmarks.Hip].Prediction,
-                     _joints[Landmarks.Neck].Prediction, 0.2f);
+        Vector3.Lerp(_joints[Landmarks.Hip].Prediction, _joints[Landmarks.Neck].Prediction, 0.2f);
 
     var midEar = Vector3.Lerp(_joints[Landmarks.LeftEar].Prediction,
                               _joints[Landmarks.RightEar].Prediction, 0.5f);
     _joints[Landmarks.Head].Prediction =
-        Vector3.Lerp(_joints[Landmarks.Neck].Prediction,
-                     midEar, 0.85f);
+        Vector3.Lerp(_joints[Landmarks.Neck].Prediction, midEar, 0.85f);
   }
 
   // <summary>
