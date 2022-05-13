@@ -14,7 +14,7 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@v0.13
       with:
         source: './Assets/Scripts'
-        exclude: './Packages,./Assets/Scripts/Mediapipe'
+        exclude: './Packages ./Assets/Scripts/Mediapipe'
         extensions: 'cs'
         clangFormatVersion: 13
         style: google
