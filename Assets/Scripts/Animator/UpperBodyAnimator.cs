@@ -42,8 +42,6 @@ public class UpperBodyAnimator : MonoBehaviour {
   private float _mouthDistance = 0;
   /// <summary>The neck joint to control head rotation.</summary>
   private Transform _neck;
-  /// <summary>The init quaternion of the model facing front.</summary>
-  private Quaternion _initQuaternion;
   /// <summary>The rotation vector for SolvePnP.</summary>
   private float[] _rotationVector = null;
   /// <summary>The translation vector for SolvePnP.</summary>
@@ -64,7 +62,6 @@ public class UpperBodyAnimator : MonoBehaviour {
     var anim = GetComponent<Animator>();
 
     _neck = anim.GetBoneTransform(HumanBodyBones.Neck);
-    _initQuaternion = _neck.rotation;
     _face3DPoints = readFace3DPoints();
   }
 
@@ -89,10 +86,10 @@ public class UpperBodyAnimator : MonoBehaviour {
 
       var roll = Mathf.Clamp((float)-Degree(_rotationVector[0]), -MaxRotationThreshold,
                              MaxRotationThreshold);
-      var yaw = (float)(Degree(_rotationVector[1]) + 180);
-      var pitch = Mathf.Clamp((float)Degree(_rotationVector[2]), -MaxRotationThreshold,
+      var yaw = (float)(-Degree(_rotationVector[1]) + 180);
+      var pitch = Mathf.Clamp((float)-Degree(_rotationVector[2]), -MaxRotationThreshold,
                               MaxRotationThreshold);
-      _neck.rotation = Quaternion.Euler(pitch, yaw, roll) * _initQuaternion;
+      _neck.localEulerAngles = new Vector3(yaw, roll, pitch);
 
       ComputeMouth(faceMesh);
       SetMouth(_mar * 100);
