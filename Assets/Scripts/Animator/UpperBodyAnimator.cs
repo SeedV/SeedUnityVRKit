@@ -84,7 +84,6 @@ public class UpperBodyAnimator : MonoBehaviour {
       solvePnP(ScreenWidth, ScreenHeight, _face3DPoints, pnpArray, null, null, _rotationVector,
                _translationVector, useExtrinsicGuess);
 
-
       var roll = Mathf.Clamp((float)-Degree(_rotationVector[0]), -MaxRotationThreshold,
                              MaxRotationThreshold);
       var yaw = (float)(-Degree(_rotationVector[1]) + 180);
