@@ -18,37 +18,39 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
-public class InputController : MonoBehaviour {
-  public enum InputMode {
-    Video,
-    Webcam,
-  }
+namespace SeedUnityVRKit {
+  public class InputController : MonoBehaviour {
+    public enum InputMode {
+      Video,
+      Webcam,
+    }
 
-  [SerializeField]
-  private InputMode _inputMode;
-  // TODO: Hide this field if _inputMode isn't set to video.
-  [SerializeField]
-  private RenderTexture _videoTexture;
-  // TODO: Hide this field if _inputMode isn't set to video.
-  [SerializeField]
-  private VideoClip _videoClip;
+    [SerializeField]
+    private InputMode _inputMode;
+    // TODO: Hide this field if _inputMode isn't set to video.
+    [SerializeField]
+    private RenderTexture _videoTexture;
+    // TODO: Hide this field if _inputMode isn't set to video.
+    [SerializeField]
+    private VideoClip _videoClip;
 
-  [SerializeField]
-  private GameObject _webcamPretab;
+    [SerializeField]
+    private GameObject _webcamPretab;
 
-  [SerializeField]
-  private GameObject _videoPretab;
+    [SerializeField]
+    private GameObject _videoPretab;
 
-  public void Start() {
-    if (_inputMode == InputMode.Video) {
-      VideoPlayer videoPlayer =
-          Instantiate(_videoPretab, gameObject.transform).GetComponent<VideoPlayer>();
-      videoPlayer.clip = _videoClip;
-      videoPlayer.targetTexture = _videoTexture;
-    } else if (_inputMode == InputMode.Webcam) {
-      Instantiate(_webcamPretab, gameObject.transform);
-    } else {
-      Debug.LogError("Invalid InputMode.");
+    public void Start() {
+      if (_inputMode == InputMode.Video) {
+        VideoPlayer videoPlayer =
+            Instantiate(_videoPretab, gameObject.transform).GetComponent<VideoPlayer>();
+        videoPlayer.clip = _videoClip;
+        videoPlayer.targetTexture = _videoTexture;
+      } else if (_inputMode == InputMode.Webcam) {
+        Instantiate(_webcamPretab, gameObject.transform);
+      } else {
+        Debug.LogError("Invalid InputMode.");
+      }
     }
   }
 }
