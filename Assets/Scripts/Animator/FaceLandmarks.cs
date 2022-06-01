@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using UnityEngine;
 
 namespace SeedUnityVRKit {
   public enum MouthShape {
@@ -26,8 +27,23 @@ namespace SeedUnityVRKit {
   }
 
   public class FaceLandmarks {
-    public MouthShape MouthShape { get; set; }
+    public float MouthAspectRatio { get; set; }
     public EyeShape LeftEyeShape { get; set; }
     public EyeShape RightEyeShape { get; set; }
+    public Vector3 FaceRotation { get; set; }
+    public MouthShape MouthShape {
+      get {
+        if (MouthAspectRatio < 0.1) {
+          return MouthShape.Close;
+        }
+        if (MouthAspectRatio < 0.25) {
+          return MouthShape.Small;
+        }
+        if (MouthAspectRatio < 0.4) {
+          return MouthShape.Mid;
+        }
+        return MouthShape.Large;
+      }
+    }
   }
 }
