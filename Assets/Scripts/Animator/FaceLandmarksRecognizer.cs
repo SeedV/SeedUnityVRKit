@@ -27,11 +27,11 @@ namespace SeedUnityVRKit {
     /// Constant canonical face model from
     /// https://github.com/google/mediapipe/blob/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
     /// </summary>
-    private float[] _face3DPoints;
+    private readonly float[] _face3DPoints;
     /// <summary>Screen width used as to scale the recognized normalized landmarks.</summary>
-    private float _screenWidth;
+    private readonly float _screenWidth;
     /// <summary>Screen height used as to scale the recognized normalized landmarks.</summary>
-    private float _screenHeight;
+    private readonly float _screenHeight;
 
     /// <summary>The rotation vector for SolvePnP.</summary>
     private float[] _rotationVector = null;
