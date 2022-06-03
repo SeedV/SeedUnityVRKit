@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using UnityEngine;
+
 namespace SeedUnityVRKit {
   // The names of each BlazePose joints in the same order.
   // https://google.github.io/mediapipe/images/mobile/pose_tracking_full_body_landmarks.png
@@ -54,10 +56,11 @@ namespace SeedUnityVRKit {
 
     // Estimated landmarks
     public const int Hip = 33;
-    public const int Head = 34;
-    public const int Neck = 35;
-    public const int Spine = 36;
+    public const int Neck = 34;
 
-    public const int Total = 37;
+    public const int Total = 35;
+
+    public int Id { get; set; }
+    public Quaternion Rotation { get; set; }
   };
 }
