@@ -59,8 +59,5 @@ namespace SeedUnityVRKit {
     public const int Neck = 34;
 
     public const int Total = 35;
-
-    public int Id { get; set; }
-    public Quaternion Rotation { get; set; }
   };
 }
