@@ -159,25 +159,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400326, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
   m_PrefabInstance: {fileID: 1919312906}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &468427540 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2425123212524125156, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
+--- !u!114 &468427542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 468427542, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
   m_PrefabInstance: {fileID: 2958611280621633103}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &468427542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 468427540}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d3ebea03ea74803935ae87b3b2aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 364035618}
-  handType: 1
 --- !u!1 &519042299
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,25 +307,17 @@ RectTransform:
   m_AnchoredPosition: {x: -50, y: -10}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &866042036 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3354807568845671365, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
+--- !u!114 &866042038 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 866042038, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
   m_PrefabInstance: {fileID: 2958611280621633103}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &866042038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866042036}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4d3ebea03ea74803935ae87b3b2aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 364035618}
-  handType: 0
 --- !u!1 &870755766
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +442,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 866042038}
+        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
+        m_MethodName: OnHandLandmarksOutput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RightHandLandmarksOutputEvent:
     m_PersistentCalls:
       m_Calls:
@@ -465,6 +461,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
           MediaPipeSDK
         m_MethodName: DrawRightHandLandmarkListLater
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 468427542}
+        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
+        m_MethodName: OnHandLandmarksOutput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1048,6 +1056,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 364035619}
     m_Modifications:
+    - target: {fileID: 468427542, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
+      propertyPath: anim
+      value: 
+      objectReference: {fileID: 364035618}
+    - target: {fileID: 866042038, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
+      propertyPath: anim
+      value: 
+      objectReference: {fileID: 364035618}
     - target: {fileID: 2091460211759904244, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
       propertyPath: m_Name
       value: IKRoot
