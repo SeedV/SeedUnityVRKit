@@ -23,8 +23,6 @@ namespace SeedUnityVRKit {
     private Animator _anim;
     private Joint[] _joints = new Joint[Landmarks.Total];
     [SerializeField]
-    private Transform _nose;
-    [SerializeField]
     private float _zScale = 0.3f;
 
     // <summary>
@@ -59,7 +57,6 @@ namespace SeedUnityVRKit {
       _joints[Landmarks.LeftEye] = new Joint(_anim.GetBoneTransform(HumanBodyBones.LeftEye));
       _joints[Landmarks.RightEar] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Head));
       _joints[Landmarks.RightEye] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightEye));
-      _joints[Landmarks.Nose] = new Joint(_nose.transform);
 
       // Right Leg
       _joints[Landmarks.RightHip] = new Joint(_anim.GetBoneTransform(HumanBodyBones.RightUpperLeg));
@@ -77,9 +74,7 @@ namespace SeedUnityVRKit {
 
       // Misc
       _joints[Landmarks.Hip] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Hips));
-      _joints[Landmarks.Head] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Head));
       _joints[Landmarks.Neck] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Neck));
-      _joints[Landmarks.Spine] = new Joint(_anim.GetBoneTransform(HumanBodyBones.Spine));
 
       // Connections
       // Right Arm
@@ -104,10 +99,6 @@ namespace SeedUnityVRKit {
       _joints[Landmarks.LeftAnkle].Child = _joints[Landmarks.LeftFootIndex];
       _joints[Landmarks.LeftAnkle].Parent = _joints[Landmarks.LeftKnee];
 
-      // Spine
-      _joints[Landmarks.Spine].Child = _joints[Landmarks.Neck];
-      _joints[Landmarks.Neck].Child = _joints[Landmarks.Head];
-
       // Set Inverse
       Vector3 forward =
           GetNormal(_joints[Landmarks.LeftShoulder].position, _joints[Landmarks.LeftHip].position,
@@ -119,11 +110,6 @@ namespace SeedUnityVRKit {
       }
       Joint hip = _joints[Landmarks.Hip];
       hip.Forward = Quaternion.LookRotation(forward);
-
-      // For Head Rotation
-      Joint head = _joints[Landmarks.Head];
-      Vector3 gaze = _joints[Landmarks.Nose].position - _joints[Landmarks.Head].position;
-      head.Forward = Quaternion.LookRotation(gaze);
     }
 
     // <summary>
@@ -145,12 +131,6 @@ namespace SeedUnityVRKit {
               jointPoint.Prediction - jointPoint.Child.Prediction, jointForward));
         }
       }
-
-      Vector3 gaze = _joints[Landmarks.Nose].Prediction - _joints[Landmarks.Head].Prediction;
-      Vector3 upwards =
-          GetNormal(_joints[Landmarks.Nose].Prediction, _joints[Landmarks.RightEar].Prediction,
-                    _joints[Landmarks.LeftEar].Prediction);
-      _joints[Landmarks.Head].SetRotation(Quaternion.LookRotation(gaze, upwards));
     }
 
     // <summary>
@@ -180,13 +160,6 @@ namespace SeedUnityVRKit {
       _joints[Landmarks.Neck].Prediction =
           Vector3.Lerp(_joints[Landmarks.LeftShoulder].Prediction,
                        _joints[Landmarks.RightShoulder].Prediction, 0.5f);
-      _joints[Landmarks.Spine].Prediction =
-          Vector3.Lerp(_joints[Landmarks.Hip].Prediction, _joints[Landmarks.Neck].Prediction, 0.2f);
-
-      var midEar = Vector3.Lerp(_joints[Landmarks.LeftEar].Prediction,
-                                _joints[Landmarks.RightEar].Prediction, 0.5f);
-      _joints[Landmarks.Head].Prediction =
-          Vector3.Lerp(_joints[Landmarks.Neck].Prediction, midEar, 0.85f);
     }
 
     // <summary>

@@ -54,10 +54,8 @@ namespace SeedUnityVRKit {
 
     // Estimated landmarks
     public const int Hip = 33;
-    public const int Head = 34;
-    public const int Neck = 35;
-    public const int Spine = 36;
+    public const int Neck = 34;
 
-    public const int Total = 37;
+    public const int Total = 35;
   };
 }

@@ -31,6 +31,7 @@ namespace SeedUnityVRKit {
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
       _graphRunner.OnFaceLandmarksOutput += _modelAnimator.OnFaceLandmarksOutput;
       _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
+      _graphRunner.OnPoseLandmarksOutput += _modelAnimator.OnPoseLandmarksOutput;
       _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
       _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
     }
