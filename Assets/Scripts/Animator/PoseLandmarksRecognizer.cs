@@ -19,7 +19,7 @@ using UnityEngine;
 namespace SeedUnityVRKit {
   public class PoseLandmarksRecognizer {
     /// <summary>Scale factor to z axis. To be tuned.</summary>
-    private const float Z_SCALE = 0.3f;
+    private const float _zScale = 0.3f;
     /// <summary>Screen width used as to scale the recognized normalized landmarks.</summary>
     private readonly float _screenWidth;
     /// <summary>Screen height used as to scale the recognized normalized landmarks.</summary>
@@ -63,7 +63,7 @@ namespace SeedUnityVRKit {
 
     private Vector3 toVector(NormalizedLandmark landmark) {
       return new Vector3(landmark.X * _screenWidth, landmark.Y * _screenHeight,
-                         landmark.Z * _screenWidth * Z_SCALE);
+                         landmark.Z * _screenWidth * _zScale);
     }
 
     // <summary>
