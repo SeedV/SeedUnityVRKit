@@ -1,5 +1,5 @@
 # Specify what files should be processed by LFS
-#Assets/Scenes/*.unity filter=lfs diff=lfs merge=lfs -text lockable
+# Assets/Scenes/*.unity filter=lfs diff=lfs merge=lfs -text lockable
 
 # 3D models
 *.3dm filter=lfs diff=lfs merge=lfs -text
