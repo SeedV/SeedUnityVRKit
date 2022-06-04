@@ -146,6 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MthDefRef: {fileID: 104718618}
+  MaxRotationThreshold: 40
+  ScreenWidth: 1920
+  ScreenHeight: 1080
 --- !u!1 &519042299
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,8 +338,95 @@ MonoBehaviour:
   _hFlip: 0
   _vFlip: 0
   _rotation: 0
-  _modelAnimator: {fileID: 364035617}
   _holisticAnnotationController: {fileID: 745539341}
+  FaceLandmarksOutputEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 364035617}
+        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
+        m_MethodName: OnFaceLandmarksOutput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 745539341}
+        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
+          MediaPipeSDK
+        m_MethodName: DrawFaceLandmarkListLater
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  PoseLandmarksOutputEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 364035617}
+        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
+        m_MethodName: OnPoseLandmarksOutput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 745539341}
+        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
+          MediaPipeSDK
+        m_MethodName: DrawPoseLandmarkListLater
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  LeftHandLandmarksOutputEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 745539341}
+        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
+          MediaPipeSDK
+        m_MethodName: DrawLeftHandLandmarkListLater
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RightHandLandmarksOutputEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 745539341}
+        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
+          MediaPipeSDK
+        m_MethodName: DrawRightHandLandmarkListLater
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &870755769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d07b3e73c0043d49519e6af864d813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputMode: 0
+  _inputMode: 1
   _videoTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
   _videoClip: {fileID: 32900000, guid: f58bf9d9f3c824749801a2af12644159, type: 3}
   _webcamPretab: {fileID: 6527068323877630318, guid: 245c7e4b7d98c4f23808723f1bf94888, type: 3}

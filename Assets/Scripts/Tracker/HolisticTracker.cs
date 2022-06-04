@@ -13,47 +13,94 @@
 // limitations under the License.
 
 using System.Collections;
+using System.Collections.Generic;
 using Mediapipe;
 using Mediapipe.Unity;
 using Mediapipe.Unity.Holistic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SeedUnityVRKit {
   [RequireComponent(typeof(HolisticTrackingGraph))]
   public class HolisticTracker : BaseTracker {
-    [SerializeField]
-    private UpperBodyAnimator _modelAnimator = null;
+    public UnityEvent<NormalizedLandmarkList> FaceLandmarksOutputEvent;
+    public UnityEvent<NormalizedLandmarkList> PoseLandmarksOutputEvent;
+    public UnityEvent<NormalizedLandmarkList> LeftHandLandmarksOutputEvent;
+    public UnityEvent<NormalizedLandmarkList> RightHandLandmarksOutputEvent;
 
-    [SerializeField]
-    private HolisticLandmarkListAnnotationController _holisticAnnotationController;
+    private List<NormalizedLandmarkList> _faceLandmarks = new List<NormalizedLandmarkList>();
+    private List<NormalizedLandmarkList> _poseLandmarks = new List<NormalizedLandmarkList>();
+    private List<NormalizedLandmarkList> _leftHandLandmarks = new List<NormalizedLandmarkList>();
+    private List<NormalizedLandmarkList> _rightHandLandmarks = new List<NormalizedLandmarkList>();
+
+    public void Update() {
+      if (_faceLandmarks.Count > 0) {
+        lock (_faceLandmarks) {
+          foreach (NormalizedLandmarkList landmark in _faceLandmarks) {
+            FaceLandmarksOutputEvent.Invoke(landmark);
+          }
+          _faceLandmarks.Clear();
+        }
+      }
+      if (_poseLandmarks.Count > 0) {
+        lock (_poseLandmarks) {
+          foreach (NormalizedLandmarkList landmark in _poseLandmarks) {
+            PoseLandmarksOutputEvent.Invoke(landmark);
+          }
+          _poseLandmarks.Clear();
+        }
+      }
+      if (_leftHandLandmarks.Count > 0) {
+        lock (_leftHandLandmarks) {
+          foreach (NormalizedLandmarkList landmark in _leftHandLandmarks) {
+            LeftHandLandmarksOutputEvent.Invoke(landmark);
+          }
+          _leftHandLandmarks.Clear();
+        }
+      }
+      if (_rightHandLandmarks.Count > 0) {
+        lock (_rightHandLandmarks) {
+          foreach (NormalizedLandmarkList landmark in _rightHandLandmarks) {
+            RightHandLandmarksOutputEvent.Invoke(landmark);
+          }
+          _rightHandLandmarks.Clear();
+        }
+      }
+    }
 
     public override void AddEventHandler() {
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
-      _graphRunner.OnFaceLandmarksOutput += _modelAnimator.OnFaceLandmarksOutput;
       _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-      _graphRunner.OnPoseLandmarksOutput += _modelAnimator.OnPoseLandmarksOutput;
       _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
       _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
     }
 
     private void OnFaceLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawFaceLandmarkListLater(eventArgs.value);
+      lock (_faceLandmarks) {
+        _faceLandmarks.Add(eventArgs.value);
+      }
     }
 
     private void OnPoseLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
+      lock (_poseLandmarks) {
+        _poseLandmarks.Add(eventArgs.value);
+      }
     }
 
     private void OnLeftHandLandmarksOutput(object stream,
                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
+      lock (_leftHandLandmarks) {
+        _leftHandLandmarks.Add(eventArgs.value);
+      }
     }
 
     private void OnRightHandLandmarksOutput(object stream,
                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
+      lock (_rightHandLandmarks) {
+        _rightHandLandmarks.Add(eventArgs.value);
+      }
     }
   }
 }
