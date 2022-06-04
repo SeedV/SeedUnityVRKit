@@ -11,10 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace SeedUnityVRKit {
-  public class PoseLandmarks {
+  public class PoseLandmarks : List<PoseLandmark> {}
+
+  public class PoseLandmark {
     public int Id { get; set; }
     public Quaternion Rotation { get; set; }
   }

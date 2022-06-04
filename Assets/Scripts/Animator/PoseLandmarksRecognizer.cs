@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 using Mediapipe;
 using Mediapipe.Unity;
 using UnityEngine;
@@ -34,8 +30,7 @@ namespace SeedUnityVRKit {
       _screenHeight = screenHeight;
     }
 
-    public IList<PoseLandmarks> recognize(NormalizedLandmarkList poseLandmarks) {
-      IList<PoseLandmarks> landmarks = new List<PoseLandmarks>();
+    public PoseLandmarks recognize(NormalizedLandmarkList poseLandmarks) {
       Vector3 leftHip = toVector(poseLandmarks.Landmark[Landmarks.LeftHip]);
       Vector3 rightHip = toVector(poseLandmarks.Landmark[Landmarks.RightHip]);
       Vector3 leftShoulder = toVector(poseLandmarks.Landmark[Landmarks.LeftShoulder]);
@@ -48,20 +43,21 @@ namespace SeedUnityVRKit {
       Vector3 forward = GetNormal(leftShoulder, leftHip, rightHip);
 
       // Note: left and right are mirrored here.
+      PoseLandmarks landmarks = new PoseLandmarks();
       landmarks.Add(
-          new PoseLandmarks { Id = Landmarks.Hip, Rotation = Quaternion.Euler(0, 180, 0) });
-      landmarks.Add(new PoseLandmarks { Id = Landmarks.LeftShoulder,
-                                        Rotation = Quaternion.LookRotation(
-                                            rightShoulder - rightElbow, -forward) });
-      landmarks.Add(new PoseLandmarks { Id = Landmarks.LeftElbow,
-                                        Rotation = Quaternion.LookRotation(
-                                            rightElbow - rightWrist, rightShoulder - rightElbow) });
-      landmarks.Add(new PoseLandmarks { Id = Landmarks.RightShoulder,
-                                        Rotation = Quaternion.LookRotation(leftShoulder - leftElbow,
-                                                                           -forward) });
-      landmarks.Add(new PoseLandmarks { Id = Landmarks.RightElbow,
-                                        Rotation = Quaternion.LookRotation(
-                                            leftElbow - leftWrist, leftShoulder - leftElbow) });
+          new PoseLandmark { Id = Landmarks.Hip, Rotation = Quaternion.Euler(0, 180, 0) });
+      landmarks.Add(new PoseLandmark { Id = Landmarks.LeftShoulder,
+                                       Rotation = Quaternion.LookRotation(
+                                           rightShoulder - rightElbow, -forward) });
+      landmarks.Add(new PoseLandmark { Id = Landmarks.LeftElbow,
+                                       Rotation = Quaternion.LookRotation(
+                                           rightElbow - rightWrist, rightShoulder - rightElbow) });
+      landmarks.Add(new PoseLandmark { Id = Landmarks.RightShoulder,
+                                       Rotation = Quaternion.LookRotation(leftShoulder - leftElbow,
+                                                                          -forward) });
+      landmarks.Add(new PoseLandmark { Id = Landmarks.RightElbow,
+                                       Rotation = Quaternion.LookRotation(
+                                           leftElbow - leftWrist, leftShoulder - leftElbow) });
       return landmarks;
     }
 
