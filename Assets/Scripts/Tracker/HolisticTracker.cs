@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mediapipe;
@@ -28,78 +29,49 @@ namespace SeedUnityVRKit {
     public UnityEvent<NormalizedLandmarkList> LeftHandLandmarksOutputEvent;
     public UnityEvent<NormalizedLandmarkList> RightHandLandmarksOutputEvent;
 
-    private List<NormalizedLandmarkList> _faceLandmarks = new List<NormalizedLandmarkList>();
-    private List<NormalizedLandmarkList> _poseLandmarks = new List<NormalizedLandmarkList>();
-    private List<NormalizedLandmarkList> _leftHandLandmarks = new List<NormalizedLandmarkList>();
-    private List<NormalizedLandmarkList> _rightHandLandmarks = new List<NormalizedLandmarkList>();
+    private NormalizedLandmarkOutputSink _faceLandmarkOutputSink =
+        new NormalizedLandmarkOutputSink();
+    private NormalizedLandmarkOutputSink _poseLandmarkOutputSink =
+        new NormalizedLandmarkOutputSink();
+    private NormalizedLandmarkOutputSink _leftHandLandmarkOutputSink =
+        new NormalizedLandmarkOutputSink();
+    private NormalizedLandmarkOutputSink _rightHandLandmarkOutputSink =
+        new NormalizedLandmarkOutputSink();
 
     public void Update() {
-      if (_faceLandmarks.Count > 0) {
-        lock (_faceLandmarks) {
-          foreach (NormalizedLandmarkList landmark in _faceLandmarks) {
-            FaceLandmarksOutputEvent.Invoke(landmark);
-          }
-          _faceLandmarks.Clear();
-        }
-      }
-      if (_poseLandmarks.Count > 0) {
-        lock (_poseLandmarks) {
-          foreach (NormalizedLandmarkList landmark in _poseLandmarks) {
-            PoseLandmarksOutputEvent.Invoke(landmark);
-          }
-          _poseLandmarks.Clear();
-        }
-      }
-      if (_leftHandLandmarks.Count > 0) {
-        lock (_leftHandLandmarks) {
-          foreach (NormalizedLandmarkList landmark in _leftHandLandmarks) {
-            LeftHandLandmarksOutputEvent.Invoke(landmark);
-          }
-          _leftHandLandmarks.Clear();
-        }
-      }
-      if (_rightHandLandmarks.Count > 0) {
-        lock (_rightHandLandmarks) {
-          foreach (NormalizedLandmarkList landmark in _rightHandLandmarks) {
-            RightHandLandmarksOutputEvent.Invoke(landmark);
-          }
-          _rightHandLandmarks.Clear();
-        }
-      }
+      _faceLandmarkOutputSink.Consume(e => FaceLandmarksOutputEvent.Invoke(e));
+      _poseLandmarkOutputSink.Consume(e => PoseLandmarksOutputEvent.Invoke(e));
+      _leftHandLandmarkOutputSink.Consume(e => LeftHandLandmarksOutputEvent.Invoke(e));
+      _rightHandLandmarkOutputSink.Consume(e => RightHandLandmarksOutputEvent.Invoke(e));
     }
 
     public override void AddEventHandler() {
-      _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
-      _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-      _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
-      _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
+      _graphRunner.OnFaceLandmarksOutput += (stream, eventArgs) =>
+          _faceLandmarkOutputSink.Add(eventArgs.value);
+      _graphRunner.OnPoseLandmarksOutput += (stream, eventArgs) =>
+          _poseLandmarkOutputSink.Add(eventArgs.value);
+      _graphRunner.OnLeftHandLandmarksOutput += (stream, eventArgs) =>
+          _leftHandLandmarkOutputSink.Add(eventArgs.value);
+      _graphRunner.OnRightHandLandmarksOutput += (stream, eventArgs) =>
+          _rightHandLandmarkOutputSink.Add(eventArgs.value);
     }
+  }
 
-    private void OnFaceLandmarksOutput(object stream,
-                                       OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      lock (_faceLandmarks) {
-        _faceLandmarks.Add(eventArgs.value);
+  class NormalizedLandmarkOutputSink {
+    private List<NormalizedLandmarkList> _landmarkQueue = new List<NormalizedLandmarkList>();
+    public void Add(NormalizedLandmarkList landmark) {
+      lock (_landmarkQueue) {
+        _landmarkQueue.Add(landmark);
       }
     }
-
-    private void OnPoseLandmarksOutput(object stream,
-                                       OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      lock (_poseLandmarks) {
-        _poseLandmarks.Add(eventArgs.value);
-      }
-    }
-
-    private void OnLeftHandLandmarksOutput(object stream,
-                                           OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      lock (_leftHandLandmarks) {
-        _leftHandLandmarks.Add(eventArgs.value);
-      }
-    }
-
-    private void OnRightHandLandmarksOutput(object stream,
-                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      lock (_rightHandLandmarks) {
-        _rightHandLandmarks.Add(eventArgs.value);
+    public void Consume(Action<NormalizedLandmarkList> invoke) {
+      if (_landmarkQueue.Count > 0) {
+        lock (_landmarkQueue) {
+          foreach (NormalizedLandmarkList e in _landmarkQueue) {
+            invoke(e);
+          }
+        }
+        _landmarkQueue.Clear();
       }
     }
   }
