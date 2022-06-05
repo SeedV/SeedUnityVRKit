@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!137 &104718618 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700020, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
-  m_PrefabInstance: {fileID: 1919312906}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &364035614 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100326, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
@@ -145,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69ac4e27202942b7b94152d18694f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MthDefRef: {fileID: 104718618}
   MaxRotationThreshold: 40
   ScreenWidth: 1920
   ScreenHeight: 1080
