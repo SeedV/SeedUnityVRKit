@@ -31,18 +31,24 @@ namespace SeedUnityVRKit {
     [Tooltip("Scale factor to properly convert mediapipe landmarks to world space.")]
     public Vector3 scale = new Vector3(0.2f, 0.2f, 0.2f);
 
+    // Total number of landmarks in HandPose model, per hand.
+    private const int _landmarksNum = 21;
     // The hand root to keep track of the position and rotation.
     private Transform _target;
 
-    private GameObject _indexTip;
+    private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
 
     void Start() {
+      // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
+      // from the animator's perspective.
       var bone =
           (handType == HandType.LeftHand) ? HumanBodyBones.RightHand : HumanBodyBones.LeftHand;
       _target = anim.GetBoneTransform(bone);
 
-      _indexTip = new GameObject("IndexTip");
-      _indexTip.transform.parent = transform;
+      for (int i = 0; i < _landmarksNum; i++) {
+        _handLandmarks[i] = new GameObject($"Point{i}");
+        _handLandmarks[i].transform.parent = transform;
+      }
     }
 
     void Update() {
@@ -54,19 +60,22 @@ namespace SeedUnityVRKit {
       if (_target != null) {
         Gizmos.DrawSphere(_target.position, 0.005f);
       }
-      if (_indexTip != null) {
-        Gizmos.DrawSphere(_indexTip.transform.position, 0.005f);
+      foreach (var handLandmark in _handLandmarks) {
+        if (handLandmark != null)
+          Gizmos.DrawSphere(handLandmark.transform.position, 0.005f);
       }
     }
 
     public void OnHandLandmarksOutput(NormalizedLandmarkList landmarkList) {
       if (landmarkList != null) {
-        NormalizedLandmark landmark8 = landmarkList.Landmark[8];
         NormalizedLandmark landmark0 = landmarkList.Landmark[0];
-        Vector3 tip = Vector3.Scale(new Vector3(landmark8.X, landmark8.Y, landmark8.Z) -
-                                        new Vector3(landmark0.X, landmark0.Y, landmark0.Z),
-                                    scale);
-        _indexTip.transform.localPosition = tip;
+        for (int i = 1; i < landmarkList.Landmark.Count; i++) {
+          NormalizedLandmark landmark = landmarkList.Landmark[i];
+          Vector3 tip = Vector3.Scale(new Vector3(landmark.X, landmark.Y, landmark.Z) -
+                                          new Vector3(landmark0.X, landmark0.Y, landmark0.Z),
+                                      scale);
+          _handLandmarks[i].transform.localPosition = tip;
+        }
       }
     }
   }
