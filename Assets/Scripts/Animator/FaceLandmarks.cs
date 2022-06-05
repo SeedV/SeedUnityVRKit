@@ -30,7 +30,7 @@ namespace SeedUnityVRKit {
     public float MouthAspectRatio { get; set; }
     public EyeShape LeftEyeShape { get; set; }
     public EyeShape RightEyeShape { get; set; }
-    public Vector3 FaceRotation { get; set; }
+    public Quaternion FaceRotation { get; set; }
     public MouthShape MouthShape {
       get {
         if (MouthAspectRatio < 0.1) {

@@ -95,10 +95,9 @@ namespace SeedUnityVRKit {
       solvePnP(_screenWidth, _screenHeight, _face3DPoints, pnpArray, null, null, _rotationVector,
                _translationVector, useExtrinsicGuess);
 
-      var roll = (float)(-Degree(_rotationVector[0]));
-      var yaw = (float)(-Degree(_rotationVector[1]) + 180);
-      var pitch = (float)(-Degree(_rotationVector[2]));
-      faceLandmarks.FaceRotation = new Vector3(yaw, roll, pitch);
+      Vector3 axis = new Vector3(_rotationVector[0], _rotationVector[1], _rotationVector[2]);
+      float theta = (float)(axis.magnitude * 180 / Math.PI);
+      faceLandmarks.FaceRotation = Quaternion.AngleAxis(theta, axis);
 
       faceLandmarks.MouthAspectRatio = ComputeMouth(faceMesh);
       var leftEyeAspectRatio = ComputeEye(faceMesh, _leftEyeIndex);
