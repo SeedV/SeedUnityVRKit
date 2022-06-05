@@ -73,8 +73,8 @@ namespace SeedUnityVRKit {
         var d = (new Vector3(landmark1.X, landmark1.Y, landmark1.Z) -
                  new Vector3(landmark0.X, landmark0.Y, landmark0.Z))
                     .magnitude;
-        var s = 0.03f / d;
-        scale = new Vector3(s, s, s);
+        var s = 0.02f / d;
+        scale = new Vector3(s * 1.920f, s * 1.080f, s * 1.920f);
         for (int i = 1; i < landmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = landmarkList.Landmark[i];
           Vector3 tip = Vector3.Scale(new Vector3(landmark.X, landmark.Y, landmark.Z) -
