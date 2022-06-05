@@ -28,9 +28,6 @@ namespace SeedUnityVRKit {
     [Tooltip("Left hand or right hand.")]
     public HandType handType;
 
-    [Tooltip("Scale factor to properly convert mediapipe landmarks to world space.")]
-    public Vector3 scale = new Vector3(0.2f, 0.2f, 0.2f);
-
     // Total number of landmarks in HandPose model, per hand.
     private const int _landmarksNum = 21;
     // The hand root to keep track of the position and rotation.
@@ -74,7 +71,7 @@ namespace SeedUnityVRKit {
                  new Vector3(landmark0.X, landmark0.Y, landmark0.Z))
                     .magnitude;
         var s = 0.02f / d;
-        scale = new Vector3(s * 1.920f, s * 1.080f, s * 1.920f);
+        var scale = new Vector3(s * 1.920f, s * 1.080f, s * 1.920f);
         for (int i = 1; i < landmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = landmarkList.Landmark[i];
           Vector3 tip = Vector3.Scale(new Vector3(landmark.X, landmark.Y, landmark.Z) -
