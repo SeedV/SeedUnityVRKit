@@ -19,8 +19,6 @@ using UnityEngine;
 namespace SeedUnityVRKit {
   // <summary>An animator to visualize upper body and face.</summary>
   public class UpperBodyAnimator : MonoBehaviour {
-    [Tooltip("Reference to MTH_DEF game object in UnityChan model.")]
-    public SkinnedMeshRenderer MthDefRef;
     [Tooltip("Max rotation angle in degree.")]
     [Range(0, 45f)]
     public float MaxRotationThreshold = 40f;
@@ -28,6 +26,7 @@ namespace SeedUnityVRKit {
     public float ScreenWidth = 1920;
     [Tooltip("Screen height used as to scale the recognized normalized landmarks.")]
     public float ScreenHeight = 1080;
+    private const string MthDefConst = "MTH_DEF";
     /// <summary>The neck joint to control head rotation.</summary>
     private Transform _neck;
     /// <summary>Face landmark recognizer.</summary>
@@ -36,6 +35,7 @@ namespace SeedUnityVRKit {
     /// <summary>Pose landmark recognizer.</summary>
     private PoseLandmarksRecognizer _poseLandmarksRecognizer;
     private NormalizedLandmarkList _poseLandmarkList;
+    private SkinnedMeshRenderer _mouthMeshRenderer;
 
     private Joint[] _joints = new Joint[Landmarks.Total];
 
@@ -46,6 +46,7 @@ namespace SeedUnityVRKit {
       _neck = anim.GetBoneTransform(HumanBodyBones.Neck);
       _faceLandmarksRecognizer = new FaceLandmarksRecognizer(ScreenWidth, ScreenHeight);
       _poseLandmarksRecognizer = new PoseLandmarksRecognizer(ScreenWidth, ScreenHeight);
+      _mouthMeshRenderer = GameObject.Find(MthDefConst).GetComponent<SkinnedMeshRenderer>();
     }
 
     private void setupJoints(Animator anim) {
@@ -110,7 +111,7 @@ namespace SeedUnityVRKit {
     }
 
     private void SetMouth(float ratio) {
-      MthDefRef.SetBlendShapeWeight(2, ratio * 100);
+      _mouthMeshRenderer.SetBlendShapeWeight(2, ratio * 100);
     }
 
     public void OnFaceLandmarksOutput(NormalizedLandmarkList list) {
