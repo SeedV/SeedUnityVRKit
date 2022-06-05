@@ -23,6 +23,21 @@ using UnityEngine;
 
 namespace SeedUnityVRKit {
   public class FaceLandmarksRecognizer {
+    // Source of truth:
+    // https://github.com/tensorflow/tfjs-models/blob/master/face-landmarks-detection/src/tfjs/constants.ts
+    private static readonly int[] _leftEyeIndex =
+        new int[] {// Lower contour.
+                   33, 7, 163, 144, 145, 153, 154, 155, 133,
+                   // upper contour (excluding corners).
+                   246, 161, 160, 159, 158, 157, 173
+        };
+    private static readonly int[] _rightEyeIndex =
+        new int[] {// Lower contour.
+                   263, 249, 390, 373, 374, 380, 381, 382, 362,
+                   // Upper contour (excluding corners).
+                   466, 388, 387, 386, 385, 384, 398
+        };
+    private static readonly float _eyeOpenThreshold = 0.33f;
     /// <summary>
     /// Constant canonical face model from
     /// https://github.com/google/mediapipe/blob/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
@@ -86,6 +101,12 @@ namespace SeedUnityVRKit {
       faceLandmarks.FaceRotation = new Vector3(yaw, roll, pitch);
 
       faceLandmarks.MouthAspectRatio = ComputeMouth(faceMesh);
+      var leftEyeAspectRatio = ComputeEye(faceMesh, _leftEyeIndex);
+      var rightEyeAspectRatio = ComputeEye(faceMesh, _rightEyeIndex);
+      faceLandmarks.LeftEyeShape =
+          leftEyeAspectRatio > _eyeOpenThreshold ? EyeShape.Open : EyeShape.Close;
+      faceLandmarks.RightEyeShape =
+          rightEyeAspectRatio > _eyeOpenThreshold ? EyeShape.Open : EyeShape.Close;
       return faceLandmarks;
     }
 
@@ -106,6 +127,14 @@ namespace SeedUnityVRKit {
       var mouthDistance = (float)(p1 - p5).magnitude;
       mar /= (float)(2 * mouthDistance + 1e-6);
       return mar;
+    }
+
+    private static float ComputeEye(IList<Vector2> faceMesh, int[] index) {
+      float total = 0;
+      for (int i = 1; i <= 7; i++) {
+        total += (faceMesh[index[i]] - faceMesh[index[8 + i]]).magnitude;
+      }
+      return total / (faceMesh[index[0]] - faceMesh[index[8]]).magnitude / 7;
     }
   }
 }
