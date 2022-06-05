@@ -69,6 +69,12 @@ namespace SeedUnityVRKit {
     public void OnHandLandmarksOutput(NormalizedLandmarkList landmarkList) {
       if (landmarkList != null) {
         NormalizedLandmark landmark0 = landmarkList.Landmark[0];
+        NormalizedLandmark landmark1 = landmarkList.Landmark[1];
+        var d = (new Vector3(landmark1.X, landmark1.Y, landmark1.Z) -
+                 new Vector3(landmark0.X, landmark0.Y, landmark0.Z))
+                    .magnitude;
+        var s = 0.03f / d;
+        scale = new Vector3(s, s, s);
         for (int i = 1; i < landmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = landmarkList.Landmark[i];
           Vector3 tip = Vector3.Scale(new Vector3(landmark.X, landmark.Y, landmark.Z) -
