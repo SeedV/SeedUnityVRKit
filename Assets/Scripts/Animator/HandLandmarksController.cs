@@ -43,7 +43,7 @@ namespace SeedUnityVRKit {
       _target = anim.GetBoneTransform(bone);
 
       for (int i = 0; i < _landmarksNum; i++) {
-        _handLandmarks[i] = new GameObject($"Point{i}");
+        _handLandmarks[i] = new GameObject($"HandLandmark{i}");
         _handLandmarks[i].transform.parent = transform;
       }
     }
