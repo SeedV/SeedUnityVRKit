@@ -50,6 +50,7 @@ namespace SeedUnityVRKit {
 
     void Update() {
       transform.position = _target.transform.position;
+      _target.rotation = ComputeWristRotation();
     }
 
     void OnDrawGizmos() {
@@ -80,6 +81,18 @@ namespace SeedUnityVRKit {
           _handLandmarks[i].transform.localPosition = tip;
         }
       }
+    }
+
+    private Quaternion ComputeWristRotation() {
+      var wristTransform = transform;
+      var indexFinger = _handLandmarks[5].transform.position;
+      var middleFinger = _handLandmarks[9].transform.position;
+
+      var vectorToMiddle = middleFinger - wristTransform.position;
+      var vectorToIndex = indexFinger - wristTransform.position;
+      Vector3.OrthoNormalize(ref vectorToMiddle, ref vectorToIndex);
+      Vector3 normalVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
+      return Quaternion.LookRotation(normalVector, vectorToIndex);
     }
   }
 }
