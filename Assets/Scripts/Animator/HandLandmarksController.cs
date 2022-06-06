@@ -68,19 +68,19 @@ namespace SeedUnityVRKit {
       if (landmarkList != null) {
         NormalizedLandmark landmark0 = landmarkList.Landmark[0];
         NormalizedLandmark landmark1 = landmarkList.Landmark[1];
-        var d = (new Vector3(landmark1.X, landmark1.Y, landmark1.Z) -
-                 new Vector3(landmark0.X, landmark0.Y, landmark0.Z))
-                    .magnitude;
+        var d = (ToVector(landmark1) - ToVector(landmark0)).magnitude;
         var s = 0.02f / d;
         var scale = new Vector3(s * 1.920f, s * 1.080f, s * 1.920f);
         for (int i = 1; i < landmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = landmarkList.Landmark[i];
-          Vector3 tip = Vector3.Scale(new Vector3(landmark.X, landmark.Y, landmark.Z) -
-                                          new Vector3(landmark0.X, landmark0.Y, landmark0.Z),
-                                      scale);
+          Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);
           _handLandmarks[i].transform.localPosition = tip;
         }
       }
+    }
+
+    private Vector3 ToVector(NormalizedLandmark landmark) {
+      return new Vector3(landmark.X, landmark.Y, landmark.Z);
     }
 
     private Quaternion ComputeWristRotation() {
