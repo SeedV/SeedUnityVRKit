@@ -27,13 +27,18 @@ namespace SeedUnityVRKit {
     public Animator anim;
     [Tooltip("Left hand or right hand.")]
     public HandType handType;
+    public int ScreenWidth;
+    public int ScreenHeight;
 
     // Total number of landmarks in HandPose model, per hand.
     private const int _landmarksNum = 21;
+    // The thumb length of the model. To apply to a new model this value should be tweak.
+    private const float _modelThumbLength = 0.02f;
     // The hand root to keep track of the position and rotation.
     private Transform _target;
 
     private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
+    private float _screenRatio = 1.0f;
 
     void Start() {
       // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
@@ -46,6 +51,7 @@ namespace SeedUnityVRKit {
         _handLandmarks[i] = new GameObject($"HandLandmark{i}");
         _handLandmarks[i].transform.parent = transform;
       }
+      _screenRatio = 1.0f * ScreenWidth / ScreenHeight;
     }
 
     void Update() {
@@ -68,9 +74,8 @@ namespace SeedUnityVRKit {
       if (landmarkList != null) {
         NormalizedLandmark landmark0 = landmarkList.Landmark[0];
         NormalizedLandmark landmark1 = landmarkList.Landmark[1];
-        var d = (ToVector(landmark1) - ToVector(landmark0)).magnitude;
-        var s = 0.02f / d;
-        var scale = new Vector3(s * 1.920f, s * 1.080f, s * 1.920f);
+        var s = _modelThumbLength / (ToVector(landmark1) - ToVector(landmark0)).magnitude;
+        var scale = new Vector3(s * _screenRatio, s, s * _screenRatio);
         for (int i = 1; i < landmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = landmarkList.Landmark[i];
           Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);

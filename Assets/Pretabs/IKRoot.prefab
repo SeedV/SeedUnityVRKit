@@ -79,7 +79,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
   handType: 1
-  scale: {x: 0.3, y: 0.3, z: 0.3}
+  ScreenWidth: 1920
+  ScreenHeight: 1080
 --- !u!1 &3354807568845671365
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,4 +127,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
   handType: 0
-  scale: {x: 0.3, y: 0.3, z: 0.3}
+  ScreenWidth: 1920
+  ScreenHeight: 1080
