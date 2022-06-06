@@ -29,6 +29,7 @@ namespace SeedUnityVRKit {
     private const string MthDefConst = "MTH_DEF";
     private const string EyeDefConst = "EYE_DEF";
     private const string ElDefConst = "EL_DEF";
+    private static readonly Quaternion _neckInitRotation = Quaternion.Euler(0, -90, -90);
     /// <summary>The neck joint to control head rotation.</summary>
     private Transform _neck;
     /// <summary>Face landmark recognizer.</summary>
@@ -98,7 +99,7 @@ namespace SeedUnityVRKit {
     void LateUpdate() {
       if (_faceLandmarkList != null) {
         FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
-        _neck.localEulerAngles = ClampFaceRotation(faceLandmarks.FaceRotation);
+        _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
         SetMouth(faceLandmarks.MouthAspectRatio);
         SetEye(faceLandmarks.LeftEyeShape == EyeShape.Close &&
                faceLandmarks.RightEyeShape == EyeShape.Close);
@@ -110,12 +111,6 @@ namespace SeedUnityVRKit {
           _joints[poseLandmark.Id].SetRotation(poseLandmark.Rotation);
         }
       }
-    }
-
-    private Vector3 ClampFaceRotation(Vector3 rotation) {
-      return new Vector3(rotation.x,  // Do not clamp x
-                         Mathf.Clamp(rotation.y, -MaxRotationThreshold, MaxRotationThreshold),
-                         Mathf.Clamp(rotation.z, -MaxRotationThreshold, MaxRotationThreshold));
     }
 
     private void SetMouth(float ratio) {
