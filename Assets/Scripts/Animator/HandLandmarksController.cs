@@ -60,10 +60,14 @@ namespace SeedUnityVRKit {
     }
 
     void OnDrawGizmos() {
-      Gizmos.color = Color.red;
       if (_target != null) {
+        Gizmos.color = Color.red;
         Gizmos.DrawSphere(_target.position, 0.005f);
+        Gizmos.color = Color.yellow;
+        Vector3 direction = _target.TransformDirection(Vector3.forward) * 1;
+        Gizmos.DrawRay(_target.position, direction);
       }
+      Gizmos.color = Color.red;
       foreach (var handLandmark in _handLandmarks) {
         if (handLandmark != null)
           Gizmos.DrawSphere(handLandmark.transform.position, 0.005f);
