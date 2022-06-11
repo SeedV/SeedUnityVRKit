@@ -42,7 +42,7 @@ namespace SeedUnityVRKit {
     private Queue<StatsData> _statsQueue = new Queue<StatsData>();
 
     public IEnumerator Start() {
-      Debug.Log($"SystemStats: Waiting for {_delaySeconds} seconds to stablize.");
+      Debug.Log($"SystemStats: Waiting for {_delaySeconds} seconds to stabilize.");
       yield return new WaitForSeconds(_delaySeconds);
       Debug.Log("SystemStats: Counters started");
       while (true) {
