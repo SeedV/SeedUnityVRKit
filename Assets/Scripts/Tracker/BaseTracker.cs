@@ -23,6 +23,7 @@ using UnityEngine;
 namespace SeedUnityVRKit {
 
   public abstract class BaseTracker : MonoBehaviour {
+    public SystemStats systemStats;
     private const string _tag = nameof(BaseTracker);
     public enum InferenceMode {
       CPU,
@@ -92,7 +93,9 @@ namespace SeedUnityVRKit {
           continue;
         }
         textureFrame.ReadTextureFromOnCPU(image);
+        systemStats?.IncrementFrameReadTexture();
         _graphRunner.AddTextureFrameToInputStream(textureFrame);
+        systemStats?.IncrementFrameAddToInputStream();
         yield return null;
       }
     }
