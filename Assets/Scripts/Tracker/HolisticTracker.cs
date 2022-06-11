@@ -39,6 +39,7 @@ namespace SeedUnityVRKit {
         new NormalizedLandmarkOutputSink();
 
     public void Update() {
+      systemStats?.IncrementFrameRendered();
       _faceLandmarkOutputSink.Consume(e => FaceLandmarksOutputEvent.Invoke(e));
       _poseLandmarkOutputSink.Consume(e => PoseLandmarksOutputEvent.Invoke(e));
       _leftHandLandmarkOutputSink.Consume(e => LeftHandLandmarksOutputEvent.Invoke(e));
@@ -46,8 +47,10 @@ namespace SeedUnityVRKit {
     }
 
     public override void AddEventHandler() {
-      _graphRunner.OnFaceLandmarksOutput += (stream, eventArgs) =>
-          _faceLandmarkOutputSink.Add(eventArgs.value);
+      _graphRunner.OnFaceLandmarksOutput += (stream, eventArgs) => {
+        _faceLandmarkOutputSink.Add(eventArgs.value);
+        systemStats?.IncrementFrameProcessed();
+      };
       _graphRunner.OnPoseLandmarksOutput += (stream, eventArgs) =>
           _poseLandmarkOutputSink.Add(eventArgs.value);
       _graphRunner.OnLeftHandLandmarksOutput += (stream, eventArgs) =>
@@ -55,23 +58,23 @@ namespace SeedUnityVRKit {
       _graphRunner.OnRightHandLandmarksOutput += (stream, eventArgs) =>
           _rightHandLandmarkOutputSink.Add(eventArgs.value);
     }
-  }
 
-  class NormalizedLandmarkOutputSink {
-    private List<NormalizedLandmarkList> _landmarkQueue = new List<NormalizedLandmarkList>();
-    public void Add(NormalizedLandmarkList landmark) {
-      lock (_landmarkQueue) {
-        _landmarkQueue.Add(landmark);
-      }
-    }
-    public void Consume(Action<NormalizedLandmarkList> invoke) {
-      if (_landmarkQueue.Count > 0) {
+    class NormalizedLandmarkOutputSink {
+      private List<NormalizedLandmarkList> _landmarkQueue = new List<NormalizedLandmarkList>();
+      public void Add(NormalizedLandmarkList landmark) {
         lock (_landmarkQueue) {
-          foreach (NormalizedLandmarkList e in _landmarkQueue) {
-            invoke(e);
-          }
+          _landmarkQueue.Add(landmark);
         }
-        _landmarkQueue.Clear();
+      }
+      public void Consume(Action<NormalizedLandmarkList> invoke) {
+        if (_landmarkQueue.Count > 0) {
+          lock (_landmarkQueue) {
+            foreach (NormalizedLandmarkList e in _landmarkQueue) {
+              invoke(e);
+            }
+          }
+          _landmarkQueue.Clear();
+        }
       }
     }
   }
