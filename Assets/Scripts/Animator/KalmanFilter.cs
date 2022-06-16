@@ -29,7 +29,7 @@ namespace SeedUnityVRKit {
     // measurement. Kalman gain is 0 means the estimated state is correct. Kalman gain is 1 means
     // the measured value (observation) is correct. It can be updated using prediction errors from
     // last state.
-    // g_k = p_(k-1) / (p_(k-1) + r)
+    // g_k = (p_(k-1) + q) / (p_(k-1) + q + r)
     private float _k;
 
     public KalmanFilter(float q, float r) {
