@@ -93,12 +93,8 @@ namespace SeedUnityVRKit {
         FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
         _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
         FaceControl.SetMouth(faceLandmarks.MouthShape);
-        if (faceLandmarks.LeftEyeShape == EyeShape.Close && faceLandmarks.RightEyeShape == EyeShape.Close) {
-          FaceControl.SetEyes(EyeShape.Close);
-        } else {
-          FaceControl.SetEyes(EyeShape.Open);
-        }
-
+        FaceControl.SetEyes(faceLandmarks.LeftEyeShape == EyeShape.Close &&
+        faceLandmarks.RightEyeShape == EyeShape.Close ? EyeShape.Close : EyeShape.Open);
       }
 
       if (_poseLandmarkList != null) {
