@@ -127,12 +127,14 @@ namespace SeedUnityVRKit {
       }
     }
 
-    public void OnFaceLandmarksOutput(NormalizedLandmarkList list) {
-      _faceLandmarkList = list;
+    public void OnFaceLandmarksOutput(object stream,
+                                      OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      _faceLandmarkList = eventArgs.value;
     }
 
-    public void OnPoseLandmarksOutput(NormalizedLandmarkList list) {
-      _poseLandmarkList = list;
+    public void OnPoseLandmarksOutput(object stream,
+                                      OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      _poseLandmarkList = eventArgs.value;
     }
   }
 }
