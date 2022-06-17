@@ -53,7 +53,11 @@ namespace SeedUnityVRKit {
     /// <summary>The translation vector for SolvePnP.</summary>
     private float[] _translationVector = new float[3];
     /// <summary>Exported native C function for SolvePnP.</summary>
+#if UNITY_MAC_X64
+    [DllImport("opencvpluginOSInter")]
+#else
     [DllImport("opencvplugin")]
+#endif
     private static extern void solvePnP(float width, float height, float[] objectPointsArray,
                                         float[] imagePointsArray, float[] cameraMatrixArray,
                                         float[] distCoeffsArray, float[] rvec, float[] tvec,
