@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using Mediapipe;
 using Mediapipe.Unity;
@@ -33,35 +34,48 @@ namespace SeedUnityVRKit {
     [SerializeField]
     private HandLandmarksController RightHandLandmarksController;
 
+    private event Action<NormalizedLandmarkList> _onFaceLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onPoseLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onLeftHandLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onRightHandLandmarksOutputEvent;
+
     public override void AddEventHandler() {
+      _onFaceLandmarksOutputEvent += _holisticAnnotationController.DrawFaceLandmarkListLater;
+      _onFaceLandmarksOutputEvent += _modelAnimator.OnFaceLandmarksOutput;
+      _onPoseLandmarksOutputEvent += _holisticAnnotationController.DrawPoseLandmarkListLater;
+      _onPoseLandmarksOutputEvent += _modelAnimator.OnPoseLandmarksOutput;
+      _onLeftHandLandmarksOutputEvent += (landmarkList) =>
+          LeftHandLandmarksController.HandLandmarkList = landmarkList;
+      _onLeftHandLandmarksOutputEvent +=
+          _holisticAnnotationController.DrawLeftHandLandmarkListLater;
+      _onRightHandLandmarksOutputEvent += (landmarkList) =>
+          RightHandLandmarksController.HandLandmarkList = landmarkList;
+      _onRightHandLandmarksOutputEvent +=
+          _holisticAnnotationController.DrawRightHandLandmarkListLater;
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
-      _graphRunner.OnFaceLandmarksOutput += _modelAnimator.OnFaceLandmarksOutput;
       _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-      _graphRunner.OnPoseLandmarksOutput += _modelAnimator.OnPoseLandmarksOutput;
       _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
       _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
     }
 
     private void OnFaceLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawFaceLandmarkListLater(eventArgs.value);
+      _onFaceLandmarksOutputEvent?.Invoke(eventArgs.value);
     }
 
     private void OnPoseLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
+      _onPoseLandmarksOutputEvent?.Invoke(eventArgs.value);
     }
 
     private void OnLeftHandLandmarksOutput(object stream,
                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      LeftHandLandmarksController.HandLandmarkList = eventArgs.value;
-      _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
+      _onLeftHandLandmarksOutputEvent?.Invoke(eventArgs.value);
     }
 
     private void OnRightHandLandmarksOutput(object stream,
                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      RightHandLandmarksController.HandLandmarkList = eventArgs.value;
-      _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
+      _onRightHandLandmarksOutputEvent?.Invoke(eventArgs.value);
     }
   }
 }
