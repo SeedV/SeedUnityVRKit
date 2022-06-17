@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -140,9 +140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69ac4e27202942b7b94152d18694f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FaceControl: {fileID: 364035620}
   MaxRotationThreshold: 40
   ScreenWidth: 1920
   ScreenHeight: 1080
+  _neckInitRotation: {x: 0.49999997, y: -0.49999997, z: -0.49999997, w: 0.49999997}
 --- !u!95 &364035618 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 9500000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
@@ -153,17 +155,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400326, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
   m_PrefabInstance: {fileID: 1919312906}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &468427542 stripped
+--- !u!114 &364035620
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 468427542, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
-  m_PrefabInstance: {fileID: 2958611280621633103}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 364035614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d3ebea03ea74803935ae87b3b2aed0, type: 3}
+  m_Script: {fileID: 11500000, guid: edf6933ca960841438b6b3b3b9153702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MouthClose: {fileID: 0}
+  MouthSmall: {fileID: 0}
+  MouthMid: {fileID: 0}
+  MouthLarge: {fileID: 0}
+  EyesClose: {fileID: 0}
+  EyesOpen: {fileID: 0}
+  Eyeslids: {fileID: 0}
 --- !u!1 &519042299
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,17 +311,6 @@ RectTransform:
   m_AnchoredPosition: {x: -50, y: -10}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &866042038 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 866042038, guid: 1639ff504c5034ce2a726caf017d9bcf, type: 3}
-  m_PrefabInstance: {fileID: 2958611280621633103}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d3ebea03ea74803935ae87b3b2aed0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &870755766
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,125 +357,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43c4c15dc634478c8fb6805864cdaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  systemStats: {fileID: 1625187022}
   _preferableInferenceMode: 0
   _textureFramePool: {fileID: 870755770}
   _sourceTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
   _hFlip: 0
   _vFlip: 0
   _rotation: 0
-  FaceLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 364035617}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
-        m_MethodName: OnFaceLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawFaceLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  PoseLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 364035617}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
-        m_MethodName: OnPoseLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawPoseLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  LeftHandLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawLeftHandLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 866042038}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
-        m_MethodName: OnHandLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  RightHandLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawRightHandLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 468427542}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
-        m_MethodName: OnHandLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  systemStats: {fileID: 1625187022}
+  _modelAnimator: {fileID: 364035617}
 --- !u!114 &870755769
 MonoBehaviour:
   m_ObjectHideFlags: 0
