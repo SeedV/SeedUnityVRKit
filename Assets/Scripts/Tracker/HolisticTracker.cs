@@ -21,64 +21,53 @@ using Mediapipe.Unity.Holistic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SeedUnityVRKit
-{
-    [RequireComponent(typeof(HolisticTrackingGraph))]
-    public class HolisticTracker : BaseTracker
-    {
+namespace SeedUnityVRKit {
+  [RequireComponent(typeof(HolisticTrackingGraph))]
+  public class HolisticTracker : BaseTracker {
 
-        [SerializeField]
-        private UpperBodyAnimator _modelAnimator;
-        [SerializeField]
-        private HandLandmarksController _leftHandAnimator;
-        [SerializeField]
-        private HandLandmarksController _rightHandAnimator;
+    [SerializeField]
+    private UpperBodyAnimator _modelAnimator;
+    [SerializeField]
+    private HandLandmarksController _leftHandAnimator;
+    [SerializeField]
+    private HandLandmarksController _rightHandAnimator;
 
-        public override void AddEventHandler()
-        {
-            _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-            _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
-            _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
-            _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
+    public override void AddEventHandler() {
+      _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
+      _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
+      _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
+      _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
 
-        }
-
-        private void OnPoseLandmarksOutput(object stream,
-                                             OutputEventArgs<NormalizedLandmarkList> eventArgs)
-        {
-            NormalizedLandmarkList poseLandmarks = eventArgs.value;
-            if (_modelAnimator != null && poseLandmarks != null)
-            {
-                _modelAnimator.OnPoseLandmarksOutput(poseLandmarks);
-            }
-        }
-
-        private void OnFaceLandmarksOutput(object stream,
-                                           OutputEventArgs<NormalizedLandmarkList> eventArgs)
-        {
-            NormalizedLandmarkList faceLandmarks = eventArgs.value;
-            if (_modelAnimator != null && faceLandmarks != null)
-            {
-                _modelAnimator.OnFaceLandmarksOutput(faceLandmarks);
-            }
-        }
-        private void OnLeftHandLandmarksOutput(object stream,
-                                           OutputEventArgs<NormalizedLandmarkList> eventArgs)
-        {
-            NormalizedLandmarkList leftHandLandmarks = eventArgs.value;
-            if (_leftHandAnimator != null && leftHandLandmarks != null)
-            {
-                _leftHandAnimator.OnHandLandmarksOutput(leftHandLandmarks);
-            }
-        }
-        private void OnRightHandLandmarksOutput(object stream,
-                                           OutputEventArgs<NormalizedLandmarkList> eventArgs)
-        {
-            NormalizedLandmarkList rightHandLandmarks = eventArgs.value;
-            if (_leftHandAnimator != null && rightHandLandmarks != null)
-            {
-                _rightHandAnimator.OnHandLandmarksOutput(rightHandLandmarks);
-            }
-        }
     }
+
+    private void OnPoseLandmarksOutput(object stream,
+                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      NormalizedLandmarkList poseLandmarks = eventArgs.value;
+      if (_modelAnimator != null && poseLandmarks != null) {
+        _modelAnimator.OnPoseLandmarksOutput(poseLandmarks);
+      }
+    }
+
+    private void OnFaceLandmarksOutput(object stream,
+                                           OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      NormalizedLandmarkList faceLandmarks = eventArgs.value;
+      if (_modelAnimator != null && faceLandmarks != null) {
+        _modelAnimator.OnFaceLandmarksOutput(faceLandmarks);
+      }
+    }
+    private void OnLeftHandLandmarksOutput(object stream,
+                                           OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      NormalizedLandmarkList leftHandLandmarks = eventArgs.value;
+      if (_leftHandAnimator != null && leftHandLandmarks != null) {
+        _leftHandAnimator.OnHandLandmarksOutput(leftHandLandmarks);
+      }
+    }
+    private void OnRightHandLandmarksOutput(object stream,
+                                         OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      NormalizedLandmarkList rightHandLandmarks = eventArgs.value;
+      if (_leftHandAnimator != null && rightHandLandmarks != null) {
+        _rightHandAnimator.OnHandLandmarksOutput(rightHandLandmarks);
+      }
+    }
+  }
 }
