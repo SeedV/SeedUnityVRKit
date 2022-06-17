@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//#define UNITY_MAC_INTER
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +53,7 @@ namespace SeedUnityVRKit {
     /// <summary>The translation vector for SolvePnP.</summary>
     private float[] _translationVector = new float[3];
     /// <summary>Exported native C function for SolvePnP.</summary>
-#if UNITY_MAC_INTER
+#if UNITY_MAC_X64
     [DllImport("opencvpluginOSInter")]
 #else
     [DllImport("opencvplugin")]
