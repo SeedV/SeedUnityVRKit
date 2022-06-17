@@ -93,8 +93,8 @@ namespace SeedUnityVRKit {
         FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
         _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
         FaceControl.SetMouth(faceLandmarks.MouthShape);
-        FaceControl.SetEyes(faceLandmarks.LeftEyeShape == EyeShape.Close &&
-        faceLandmarks.RightEyeShape == EyeShape.Close ? EyeShape.Close : EyeShape.Open);
+        SetEye(faceLandmarks.LeftEyeShape == EyeShape.Close &&
+               faceLandmarks.RightEyeShape == EyeShape.Close);
       }
 
       if (_poseLandmarkList != null) {
@@ -109,6 +109,14 @@ namespace SeedUnityVRKit {
       return new Vector3(rotation.x,  // Do not clamp x.
                          Mathf.Clamp(rotation.y, -MaxRotationThreshold, MaxRotationThreshold),
                          Mathf.Clamp(rotation.z, -MaxRotationThreshold, MaxRotationThreshold));
+    }
+
+    private void SetEye(bool close) {
+      if (close) {
+        FaceControl.SetEyes(EyeShape.Close);
+      } else {
+        FaceControl.SetEyes(EyeShape.Open);
+      }
     }
 
     public void OnFaceLandmarksOutput(object stream,
