@@ -26,6 +26,8 @@ namespace SeedUnityVRKit {
     public float ScreenWidth = 1920;
     [Tooltip("Screen height used as to scale the recognized normalized landmarks.")]
     public float ScreenHeight = 1080;
+    [Tooltip("The motion tracker to be used to generate motion tracking results.")]
+    public BaseTracker Tracker;
     private const string MthDefConst = "MTH_DEF";
     private const string EyeDefConst = "EYE_DEF";
     private const string ElDefConst = "EL_DEF";

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Logger = Mediapipe.Unity.Logger;  // Disambiguation with UnityEngine.Logger
@@ -53,6 +54,11 @@ namespace SeedUnityVRKit {
     // <summary>Attaches any event handler for callbacks. </summary>
     public abstract void AddEventHandler();
 
+    public event Action<NormalizedLandmarkList> OnFaceLandmarksOutput;
+    public event Action<NormalizedLandmarkList> OnPoseLandmarksOutput;
+    public event Action<NormalizedLandmarkList> OnLeftHandLandmarksOutput;
+    public event Action<NormalizedLandmarkList> OnRightHandLandmarksOutput;
+
     public IEnumerator Start() {
       _graphRunner = GetComponent<HolisticTrackingGraph>();
       AssetLoader.Provide(new StreamingAssetsResourceManager());
@@ -71,6 +77,16 @@ namespace SeedUnityVRKit {
         Debug.Log(graphInitRequest.error);
         yield break;
       }
+      _graphRunner.OnFaceLandmarksOutput += (stream, eventArgs) => {
+        OnFaceLandmarksOutput?.Invoke(eventArgs.value);
+        systemStats?.IncrementFrameProcessed();
+      };
+      _graphRunner.OnPoseLandmarksOutput += (stream, eventArgs) =>
+          OnPoseLandmarksOutput?.Invoke(eventArgs.value);
+      _graphRunner.OnLeftHandLandmarksOutput += (stream, eventArgs) =>
+          OnLeftHandLandmarksOutput?.Invoke(eventArgs.value);
+      _graphRunner.OnRightHandLandmarksOutput += (stream, eventArgs) =>
+          OnRightHandLandmarksOutput?.Invoke(eventArgs.value);
       AddEventHandler();
       Logger.LogInfo(_tag, "Graph Runner Init!");
       SidePacket sidePacket = _graphRunner.BuildSidePacket(_rotation, _hFlip, _vFlip);

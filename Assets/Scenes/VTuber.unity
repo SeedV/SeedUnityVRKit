@@ -143,6 +143,7 @@ MonoBehaviour:
   MaxRotationThreshold: 40
   ScreenWidth: 1920
   ScreenHeight: 1080
+  Tracker: {fileID: 870755768}
 --- !u!95 &364035618 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 9500000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
@@ -358,125 +359,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43c4c15dc634478c8fb6805864cdaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  systemStats: {fileID: 1625187022}
   _preferableInferenceMode: 0
   _textureFramePool: {fileID: 870755770}
   _sourceTexture: {fileID: 8400000, guid: 2f554cb661d074111946ede904c39043, type: 2}
   _hFlip: 0
   _vFlip: 0
   _rotation: 0
-  FaceLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 364035617}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
-        m_MethodName: OnFaceLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawFaceLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  PoseLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 364035617}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.UpperBodyAnimator, Assembly-CSharp
-        m_MethodName: OnPoseLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawPoseLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  LeftHandLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawLeftHandLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 866042038}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
-        m_MethodName: OnHandLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  RightHandLandmarksOutputEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 745539341}
-        m_TargetAssemblyTypeName: Mediapipe.Unity.HolisticLandmarkListAnnotationController,
-          MediaPipeSDK
-        m_MethodName: DrawRightHandLandmarkListLater
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 468427542}
-        m_TargetAssemblyTypeName: SeedUnityVRKit.HandLandmarksController, Assembly-CSharp
-        m_MethodName: OnHandLandmarksOutput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  systemStats: {fileID: 1625187022}
+  Animator: {fileID: 364035617}
+  LeftHandLandmarksController: {fileID: 866042038}
+  RightHandLandmarksController: {fileID: 468427542}
 --- !u!114 &870755769
 MonoBehaviour:
   m_ObjectHideFlags: 0
