@@ -25,6 +25,8 @@ namespace SeedUnityVRKit {
   [RequireComponent(typeof(HolisticTrackingGraph))]
   public class HolisticTracker : BaseTracker {
     public UpperBodyAnimator Animator;
+    [SerializeField]
+    private HolisticLandmarkListAnnotationController _holisticAnnotationController;
     public HandLandmarksController LeftHandLandmarksController;
     public HandLandmarksController RightHandLandmarksController;
 
@@ -35,6 +37,10 @@ namespace SeedUnityVRKit {
     public override void AddEventHandler() {
       OnFaceLandmarksOutput += Animator.OnFaceLandmarksOutput;
       OnPoseLandmarksOutput += Animator.OnPoseLandmarksOutput;
+      OnFaceLandmarksOutput += _holisticAnnotationController.DrawFaceLandmarkListLater;
+      OnPoseLandmarksOutput += _holisticAnnotationController.DrawPoseLandmarkListLater;
+      OnLeftHandLandmarksOutput += _holisticAnnotationController.DrawLeftHandLandmarkListLater;
+      OnRightHandLandmarksOutput += _holisticAnnotationController.DrawRightHandLandmarkListLater;
       // OnLeftHandLandmarksOutput += LeftHandLandmarksController.OnHandLandmarksOutput;
       // OnRightHandLandmarksOutput += RightHandLandmarksController.OnHandLandmarksOutput;
     }

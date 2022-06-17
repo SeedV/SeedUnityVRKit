@@ -367,6 +367,7 @@ MonoBehaviour:
   _vFlip: 0
   _rotation: 0
   Animator: {fileID: 364035617}
+  _holisticAnnotationController: {fileID: 745539341}
   LeftHandLandmarksController: {fileID: 866042038}
   RightHandLandmarksController: {fileID: 468427542}
 --- !u!114 &870755769
