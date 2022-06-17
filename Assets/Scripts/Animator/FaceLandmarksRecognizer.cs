@@ -54,7 +54,7 @@ namespace SeedUnityVRKit {
     private float[] _translationVector = new float[3];
     /// <summary>Exported native C function for SolvePnP.</summary>
 #if UNITY_MAC_X64
-    [DllImport("opencvpluginOSInter")]
+    [DllImport("opencvplugin_x64")]
 #else
     [DllImport("opencvplugin")]
 #endif
