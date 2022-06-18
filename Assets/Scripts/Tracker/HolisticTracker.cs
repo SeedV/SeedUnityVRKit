@@ -27,6 +27,12 @@ namespace SeedUnityVRKit {
     [SerializeField]
     private HolisticLandmarkListAnnotationController _holisticAnnotationController;
 
+    [SerializeField]
+    private HandLandmarksController LeftHandLandmarksController;
+
+    [SerializeField]
+    private HandLandmarksController RightHandLandmarksController;
+
     public override void AddEventHandler() {
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
       _graphRunner.OnFaceLandmarksOutput += _modelAnimator.OnFaceLandmarksOutput;
@@ -48,11 +54,13 @@ namespace SeedUnityVRKit {
 
     private void OnLeftHandLandmarksOutput(object stream,
                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      LeftHandLandmarksController.HandLandmarkList = eventArgs.value;
       _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
     }
 
     private void OnRightHandLandmarksOutput(object stream,
                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
+      RightHandLandmarksController.HandLandmarkList = eventArgs.value;
       _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
     }
   }

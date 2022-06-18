@@ -29,6 +29,7 @@ namespace SeedUnityVRKit {
     public HandType handType;
     public int ScreenWidth;
     public int ScreenHeight;
+    public NormalizedLandmarkList HandLandmarkList { private get; set; }
 
     // Total number of landmarks in HandPose model, per hand.
     private const int _landmarksNum = 21;
@@ -57,6 +58,18 @@ namespace SeedUnityVRKit {
     void Update() {
       transform.position = _target.transform.position;
       _target.rotation = ComputeWristRotation();
+
+      if (HandLandmarkList != null) {
+        NormalizedLandmark landmark0 = HandLandmarkList.Landmark[0];
+        NormalizedLandmark landmark1 = HandLandmarkList.Landmark[1];
+        var s = _modelThumbLength / (ToVector(landmark1) - ToVector(landmark0)).magnitude;
+        var scale = new Vector3(s * _screenRatio, s, s * _screenRatio);
+        for (int i = 1; i < HandLandmarkList.Landmark.Count; i++) {
+          NormalizedLandmark landmark = HandLandmarkList.Landmark[i];
+          Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);
+          _handLandmarks[i].transform.localPosition = tip;
+        }
+      }
     }
 
     void OnDrawGizmos() {
@@ -71,20 +84,6 @@ namespace SeedUnityVRKit {
       foreach (var handLandmark in _handLandmarks) {
         if (handLandmark != null)
           Gizmos.DrawSphere(handLandmark.transform.position, 0.005f);
-      }
-    }
-
-    public void OnHandLandmarksOutput(NormalizedLandmarkList landmarkList) {
-      if (landmarkList != null) {
-        NormalizedLandmark landmark0 = landmarkList.Landmark[0];
-        NormalizedLandmark landmark1 = landmarkList.Landmark[1];
-        var s = _modelThumbLength / (ToVector(landmark1) - ToVector(landmark0)).magnitude;
-        var scale = new Vector3(s * _screenRatio, s, s * _screenRatio);
-        for (int i = 1; i < landmarkList.Landmark.Count; i++) {
-          NormalizedLandmark landmark = landmarkList.Landmark[i];
-          Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);
-          _handLandmarks[i].transform.localPosition = tip;
-        }
       }
     }
 
