@@ -29,10 +29,10 @@ namespace SeedUnityVRKit {
     private HolisticLandmarkListAnnotationController _holisticAnnotationController;
 
     [SerializeField]
-    private HandLandmarksController LeftHandLandmarksController;
+    private HandLandmarksController _leftHandLandmarksController;
 
     [SerializeField]
-    private HandLandmarksController RightHandLandmarksController;
+    private HandLandmarksController _rightHandLandmarksController;
 
     private event Action<NormalizedLandmarkList> _onFaceLandmarksOutputEvent;
     private event Action<NormalizedLandmarkList> _onPoseLandmarksOutputEvent;
@@ -45,11 +45,11 @@ namespace SeedUnityVRKit {
       _onPoseLandmarksOutputEvent += _holisticAnnotationController.DrawPoseLandmarkListLater;
       _onPoseLandmarksOutputEvent += _modelAnimator.OnPoseLandmarksOutput;
       _onLeftHandLandmarksOutputEvent += (landmarkList) =>
-          LeftHandLandmarksController.HandLandmarkList = landmarkList;
+          _leftHandLandmarksController.HandLandmarkList = landmarkList;
       _onLeftHandLandmarksOutputEvent +=
           _holisticAnnotationController.DrawLeftHandLandmarkListLater;
       _onRightHandLandmarksOutputEvent += (landmarkList) =>
-          RightHandLandmarksController.HandLandmarkList = landmarkList;
+          _rightHandLandmarksController.HandLandmarkList = landmarkList;
       _onRightHandLandmarksOutputEvent +=
           _holisticAnnotationController.DrawRightHandLandmarkListLater;
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
