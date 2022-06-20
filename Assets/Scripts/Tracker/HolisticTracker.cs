@@ -60,22 +60,34 @@ namespace SeedUnityVRKit {
 
     private void OnFaceLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _onFaceLandmarksOutputEvent?.Invoke(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onFaceLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnPoseLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _onPoseLandmarksOutputEvent?.Invoke(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onPoseLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnLeftHandLandmarksOutput(object stream,
                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _onLeftHandLandmarksOutputEvent?.Invoke(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onLeftHandLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnRightHandLandmarksOutput(object stream,
                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _onRightHandLandmarksOutputEvent?.Invoke(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onRightHandLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
   }
 }
