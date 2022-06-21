@@ -100,7 +100,7 @@ namespace SeedUnityVRKit {
       if (_faceLandmarkList != null) {
         FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
         _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
-        SetMouth(faceLandmarks.MouthAspectRatio, faceLandmarks.MouthShape);
+        SetMouth(faceLandmarks);
         SetEye(faceLandmarks.LeftEyeShape == EyeShape.Close &&
                faceLandmarks.RightEyeShape == EyeShape.Close);
       }
@@ -113,8 +113,8 @@ namespace SeedUnityVRKit {
       }
     }
 
-    public virtual void SetMouth(float ratio, MouthShape mouthShape) {
-      _mouthMeshRenderer.SetBlendShapeWeight(2, ratio * 100);
+    public virtual void SetMouth(FaceLandmarks faceLandmarks) {
+      _mouthMeshRenderer.SetBlendShapeWeight(2, faceLandmarks.MouthAspectRatio * 100);
     }
 
     public virtual void SetEye(bool close) {
