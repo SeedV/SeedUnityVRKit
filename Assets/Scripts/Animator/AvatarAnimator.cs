@@ -32,10 +32,10 @@ namespace SeedUnityVRKit {
     }
 
     public override void SetMouth(FaceLandmarks faceLandmarks) {
-      SetObjectVisible(MouthClose, MouthShape.Close == faceLandmarks.mouthShape);
-      SetObjectVisible(MouthSmall, MouthShape.Small == faceLandmarks.mouthShape);
-      SetObjectVisible(MouthMid, MouthShape.Mid == faceLandmarks.mouthShape);
-      SetObjectVisible(MouthLarge, MouthShape.Large == faceLandmarks.mouthShape);
+      SetObjectVisible(MouthClose, MouthShape.Close == faceLandmarks.MouthShape);
+      SetObjectVisible(MouthSmall, MouthShape.Small == faceLandmarks.MouthShape);
+      SetObjectVisible(MouthMid, MouthShape.Mid == faceLandmarks.MouthShape);
+      SetObjectVisible(MouthLarge, MouthShape.Large == faceLandmarks.MouthShape);
     }
 
     public override void SetEye(bool close) {
