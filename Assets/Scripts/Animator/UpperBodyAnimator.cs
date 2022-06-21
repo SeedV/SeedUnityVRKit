@@ -24,12 +24,12 @@ namespace SeedUnityVRKit {
     public float MaxRotationThreshold = 40f;
     [Tooltip("Screen width used as to scale the recognized normalized landmarks.")]
     public float ScreenWidth = 1920;
+    public Quaternion _neckInitRotation = Quaternion.Euler(0, -90, -90);
     [Tooltip("Screen height used as to scale the recognized normalized landmarks.")]
     public float ScreenHeight = 1080;
     private const string MthDefConst = "MTH_DEF";
     private const string EyeDefConst = "EYE_DEF";
     private const string ElDefConst = "EL_DEF";
-    private static readonly Quaternion _neckInitRotation = Quaternion.Euler(0, -90, -90);
     /// <summary>The neck joint to control head rotation.</summary>
     private Transform _neck;
     /// <summary>Face landmark recognizer.</summary>
@@ -100,7 +100,7 @@ namespace SeedUnityVRKit {
       if (_faceLandmarkList != null) {
         FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
         _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
-        SetMouth(faceLandmarks.MouthAspectRatio);
+        SetMouth(faceLandmarks.MouthAspectRatio, faceLandmarks.MouthShape);
         SetEye(faceLandmarks.LeftEyeShape == EyeShape.Close &&
                faceLandmarks.RightEyeShape == EyeShape.Close);
       }
@@ -113,11 +113,11 @@ namespace SeedUnityVRKit {
       }
     }
 
-    private void SetMouth(float ratio) {
+    public virtual void SetMouth(float ratio, MouthShape mouthShape) {
       _mouthMeshRenderer.SetBlendShapeWeight(2, ratio * 100);
     }
 
-    private void SetEye(bool close) {
+    public virtual void SetEye(bool close) {
       if (close) {
         _eyeMeshRenderer.SetBlendShapeWeight(6, 100);
         _elMeshRenderer.SetBlendShapeWeight(6, 100);

@@ -18,115 +18,31 @@ using UnityEngine;
 
 namespace SeedUnityVRKit {
   // <summary>An animator to visualize upper body and face.</summary>
-  public class AvatarAnimator : MonoBehaviour {
-    public FaceController FaceControl;
-    [Tooltip("Max rotation angle in degree.")]
-    [Range(0, 45f)]
-    public float MaxRotationThreshold = 40f;
-    [Tooltip("Screen width used as to scale the recognized normalized landmarks.")]
-    public float ScreenWidth = 1920;
-    [Tooltip("Screen height used as to scale the recognized normalized landmarks.")]
-    public float ScreenHeight = 1080;
-    private static readonly Quaternion _neckInitRotation = Quaternion.identity;
-    /// <summary>The neck joint to control head rotation.</summary>
-    private Transform _neck;
-    /// <summary>Face landmark recognizer.</summary>
-    private FaceLandmarksRecognizer _faceLandmarksRecognizer;
-    private NormalizedLandmarkList _faceLandmarkList;
-    /// <summary>Pose landmark recognizer.</summary>
-    private PoseLandmarksRecognizer _poseLandmarksRecognizer;
-    private NormalizedLandmarkList _poseLandmarkList;
+  public class AvatarAnimator : UpperBodyAnimator {
+    public GameObject MouthClose;
+    public GameObject MouthSmall;
+    public GameObject MouthMid;
+    public GameObject MouthLarge;
+    public GameObject EyesClose;
+    public GameObject EyesOpen;
+    public GameObject Eyeslids;
 
-    private Joint[] _joints = new Joint[Landmarks.Total];
-
-    void Start() {
-      var anim = GetComponent<Animator>();
-
-      setupJoints(anim);
-      _neck = anim.GetBoneTransform(HumanBodyBones.Neck);
-      _faceLandmarksRecognizer = new FaceLandmarksRecognizer(ScreenWidth, ScreenHeight);
-      _poseLandmarksRecognizer = new PoseLandmarksRecognizer(ScreenWidth, ScreenHeight);
+    private void SetObjectVisible(GameObject obj, bool flag) {
+      obj.SetActive(flag);
     }
 
-    private void setupJoints(Animator anim) {
-      // Right Arm.
-      _joints[Landmarks.RightShoulder] =
-          new Joint(anim.GetBoneTransform(HumanBodyBones.RightUpperArm));
-      _joints[Landmarks.RightElbow] =
-          new Joint(anim.GetBoneTransform(HumanBodyBones.RightLowerArm));
-      _joints[Landmarks.RightWrist] = new Joint(anim.GetBoneTransform(HumanBodyBones.RightHand));
-
-      // Left Arm.
-      _joints[Landmarks.LeftShoulder] =
-          new Joint(anim.GetBoneTransform(HumanBodyBones.LeftUpperArm));
-      _joints[Landmarks.LeftElbow] = new Joint(anim.GetBoneTransform(HumanBodyBones.LeftLowerArm));
-      _joints[Landmarks.LeftWrist] = new Joint(anim.GetBoneTransform(HumanBodyBones.LeftHand));
-
-      // Hip.
-      _joints[Landmarks.Hip] = new Joint(anim.GetBoneTransform(HumanBodyBones.Hips));
-
-      // Connections.
-      // Right Arm.
-      _joints[Landmarks.RightShoulder].Child = _joints[Landmarks.RightElbow];
-      _joints[Landmarks.RightElbow].Child = _joints[Landmarks.RightWrist];
-      _joints[Landmarks.RightElbow].Parent = _joints[Landmarks.RightShoulder];
-
-      // Left Arm.
-      _joints[Landmarks.LeftShoulder].Child = _joints[Landmarks.LeftElbow];
-      _joints[Landmarks.LeftElbow].Child = _joints[Landmarks.LeftWrist];
-      _joints[Landmarks.LeftElbow].Parent = _joints[Landmarks.LeftShoulder];
-
-      // Assuming body is always facing the -Z axis.
-      // In the future if we need to turn the upper body, we may revise this.
-      Vector3 forward = new Vector3(0, 0, -1);
-      foreach (Joint joint in _joints) {
-        if (joint != null && joint.Child != null) {
-          joint.Forward = Quaternion.LookRotation(joint.position - joint.Child.position, forward);
-        }
-      }
-      Joint hip = _joints[Landmarks.Hip];
-      hip.Forward = Quaternion.LookRotation(forward);
+    public override void SetMouth(float ratio, MouthShape mouthShape) {
+      SetObjectVisible(MouthClose, MouthShape.Close == mouthShape);
+      SetObjectVisible(MouthSmall, MouthShape.Small == mouthShape);
+      SetObjectVisible(MouthMid, MouthShape.Mid == mouthShape);
+      SetObjectVisible(MouthLarge, MouthShape.Large == mouthShape);
     }
 
-    void LateUpdate() {
-      if (_faceLandmarkList != null) {
-        FaceLandmarks faceLandmarks = _faceLandmarksRecognizer.recognize(_faceLandmarkList);
-        _neck.rotation = faceLandmarks.FaceRotation * _neckInitRotation;
-        FaceControl.SetMouth(faceLandmarks.MouthShape);
-        SetEye(faceLandmarks.LeftEyeShape == EyeShape.Close &&
-               faceLandmarks.RightEyeShape == EyeShape.Close);
-      }
-
-      if (_poseLandmarkList != null) {
-        var poseLandmarks = _poseLandmarksRecognizer.recognize(_poseLandmarkList);
-        foreach (var poseLandmark in poseLandmarks) {
-          _joints[poseLandmark.Id].SetRotation(poseLandmark.Rotation);
-        }
-      }
-    }
-
-    private Vector3 ClampFaceRotation(Vector3 rotation) {
-      return new Vector3(rotation.x,  // Do not clamp x.
-                         Mathf.Clamp(rotation.y, -MaxRotationThreshold, MaxRotationThreshold),
-                         Mathf.Clamp(rotation.z, -MaxRotationThreshold, MaxRotationThreshold));
-    }
-
-    private void SetEye(bool close) {
-      if (close) {
-        FaceControl.SetEyes(EyeShape.Close);
-      } else {
-        FaceControl.SetEyes(EyeShape.Open);
-      }
-    }
-
-    public void OnFaceLandmarksOutput(object stream,
-                                      OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _faceLandmarkList = eventArgs.value;
-    }
-
-    public void OnPoseLandmarksOutput(object stream,
-                                      OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _poseLandmarkList = eventArgs.value;
+    public override void SetEye(bool close) {
+      EyeShape eyeShape = close ? EyeShape.Close : EyeShape.Open;
+      SetObjectVisible(EyesClose, EyeShape.Close == eyeShape);
+      SetObjectVisible(EyesOpen, EyeShape.Open == eyeShape);
+      SetObjectVisible(Eyeslids, EyeShape.Open == eyeShape);
     }
   }
 }
