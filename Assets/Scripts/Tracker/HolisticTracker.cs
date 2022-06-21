@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using Mediapipe;
 using Mediapipe.Unity;
@@ -28,40 +29,65 @@ namespace SeedUnityVRKit {
     private HolisticLandmarkListAnnotationController _holisticAnnotationController;
 
     [SerializeField]
-    private HandLandmarksController LeftHandLandmarksController;
+    private HandLandmarksController _leftHandLandmarksController;
 
     [SerializeField]
-    private HandLandmarksController RightHandLandmarksController;
+    private HandLandmarksController _rightHandLandmarksController;
+
+    private event Action<NormalizedLandmarkList> _onFaceLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onPoseLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onLeftHandLandmarksOutputEvent;
+    private event Action<NormalizedLandmarkList> _onRightHandLandmarksOutputEvent;
 
     public override void AddEventHandler() {
+      _onFaceLandmarksOutputEvent += _holisticAnnotationController.DrawFaceLandmarkListLater;
+      _onFaceLandmarksOutputEvent += _modelAnimator.OnFaceLandmarksOutput;
+      _onPoseLandmarksOutputEvent += _holisticAnnotationController.DrawPoseLandmarkListLater;
+      _onPoseLandmarksOutputEvent += _modelAnimator.OnPoseLandmarksOutput;
+      _onLeftHandLandmarksOutputEvent += (landmarkList) =>
+          _leftHandLandmarksController.HandLandmarkList = landmarkList;
+      _onLeftHandLandmarksOutputEvent +=
+          _holisticAnnotationController.DrawLeftHandLandmarkListLater;
+      _onRightHandLandmarksOutputEvent += (landmarkList) =>
+          _rightHandLandmarksController.HandLandmarkList = landmarkList;
+      _onRightHandLandmarksOutputEvent +=
+          _holisticAnnotationController.DrawRightHandLandmarkListLater;
       _graphRunner.OnFaceLandmarksOutput += OnFaceLandmarksOutput;
-      _graphRunner.OnFaceLandmarksOutput += _modelAnimator.OnFaceLandmarksOutput;
       _graphRunner.OnPoseLandmarksOutput += OnPoseLandmarksOutput;
-      _graphRunner.OnPoseLandmarksOutput += _modelAnimator.OnPoseLandmarksOutput;
       _graphRunner.OnLeftHandLandmarksOutput += OnLeftHandLandmarksOutput;
       _graphRunner.OnRightHandLandmarksOutput += OnRightHandLandmarksOutput;
     }
 
     private void OnFaceLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawFaceLandmarkListLater(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onFaceLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnPoseLandmarksOutput(object stream,
                                        OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      _holisticAnnotationController.DrawPoseLandmarkListLater(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onPoseLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnLeftHandLandmarksOutput(object stream,
                                            OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      LeftHandLandmarksController.HandLandmarkList = eventArgs.value;
-      _holisticAnnotationController.DrawLeftHandLandmarkListLater(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onLeftHandLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
 
     private void OnRightHandLandmarksOutput(object stream,
                                             OutputEventArgs<NormalizedLandmarkList> eventArgs) {
-      RightHandLandmarksController.HandLandmarkList = eventArgs.value;
-      _holisticAnnotationController.DrawRightHandLandmarkListLater(eventArgs.value);
+      NormalizedLandmarkList landmarkList = eventArgs.value;
+      if (landmarkList != null) {
+        _onRightHandLandmarksOutputEvent?.Invoke(landmarkList);
+      }
     }
   }
 }

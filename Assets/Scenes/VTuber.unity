@@ -356,8 +356,8 @@ MonoBehaviour:
   _rotation: 0
   _modelAnimator: {fileID: 364035617}
   _holisticAnnotationController: {fileID: 745539341}
-  LeftHandLandmarksController: {fileID: 806519408}
-  RightHandLandmarksController: {fileID: 2073231105}
+  _leftHandLandmarksController: {fileID: 806519408}
+  _rightHandLandmarksController: {fileID: 2073231105}
 --- !u!114 &870755769
 MonoBehaviour:
   m_ObjectHideFlags: 0
