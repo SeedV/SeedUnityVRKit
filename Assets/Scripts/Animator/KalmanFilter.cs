@@ -47,11 +47,5 @@ namespace SeedUnityVRKit {
       _p = (1 - _k) * pPred;
       return _x = _x + (measurement - _x) * _k;
     }
-
-    public void Reset() {
-      _p = 1;
-      _x = Vector3.zero;
-      _k = 0;
-    }
   }
 }
