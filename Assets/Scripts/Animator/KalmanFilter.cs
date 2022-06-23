@@ -8,28 +8,32 @@ namespace SeedUnityVRKit {
   // A good interactive tutorial for beginners about Kalman filter is
   // https://simondlevy.academic.wlu.edu/kalman-tutorial/.
   //
-  // This is a scalar version, only models one variable (position).
+  // This is a one-dimensional version, only models one variable (position).
   // </summary>
   public class KalmanFilter {
-    // Process noise models noise to an "ideal" estimated state transition. The larger the
-    // value, the less accurate the new estimation is based on law of physics.
+    // Variance of how confident the new estimate follows the prediction.
+    // A prediction assumed an ideal state transition following the law of physics.
     private readonly float _q;
-    // Measure noise models noise in the measurement process. The larger the value is, the
-    // less accurate the measure is.
+    // Variance of how confident the measurement is. The larger this value, the less confident the
+    // measurement is.
     private readonly float _r;
-    // Prediction error is used to update the Kalman gain. It is recursively updated from its
-    // last value with Kalman gain.
-    // p_k = (1 – g_k) * p_(k−1)
+    // Variance of how confident the current estimation is.
+    // Predict:
+    //   pPred = p + q
+    // Update:
+    //   p = (1 - K) * pPred
     private float _p = 0.1f;
-    // Prediction is recursively updated with
-    // x_k = x_(k-1) + g_k * (z_k - x_(k-1))
-    // It presents the most likely position of the object at given observation.
+    // The estimated position of the object.
+    // Predict:
+    //   xPred = x
+    // Update:
+    //   x = xPred + K * (measurement - xPred)
     private Vector3 _x;
-    // The Kalman gain is used to trade-off between estimated state from last time and current
-    // measurement. Kalman gain is 0 means the estimated state is correct. Kalman gain is 1 means
-    // the measured value (observation) is correct. It can be updated using prediction errors from
-    // last state.
-    // g_k = (p_(k-1) + q) / (p_(k-1) + q + r)
+    // The Kalman gain is a scale factor between the predicted location and measurement.
+    // Kalman gain is 0 means the predicted location is correct. Kalman gain is 1 means
+    // the measured value (observation) is correct.
+    // Update:
+    //   K = pPred / (pPred + r)
     private float _k;
 
     public KalmanFilter(float q, float r) {
@@ -38,10 +42,10 @@ namespace SeedUnityVRKit {
     }
 
     public Vector3 Update(Vector3 measurement) {
-      _k = (_p + _q) / (_p + _q + _r);
-      _p = _r * (_p + _q) / (_r + _p + _q);
-      Vector3 ret = _x + (measurement - _x) * _k;
-      return _x = ret;
+      var pPred = _p + _q;
+      _k = pPred / (pPred + _r);
+      _p = (1 - _k) * pPred;
+      return _x = _x + (measurement - _x) * _k;
     }
 
     public void Reset() {
