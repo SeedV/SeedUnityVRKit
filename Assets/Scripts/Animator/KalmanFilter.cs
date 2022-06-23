@@ -41,6 +41,16 @@ namespace SeedUnityVRKit {
       _r = r;
     }
 
+    // <summary>
+    // Updates the internal estimation based on measurement. Returns the new estimated position of
+    // the object x.
+    //
+    // Since the predict is trivial in our model, we run predict as a part of the update.
+    // Predict:
+    //   Calculate xPred (which is the same as x, so no op), and pPred
+    // Update:
+    //   Update K based on pPred, then apply it to calculate a new x and a new p.
+    // </summary>
     public Vector3 Update(Vector3 measurement) {
       var pPred = _p + _q;
       _k = pPred / (pPred + _r);
@@ -48,6 +58,12 @@ namespace SeedUnityVRKit {
       return _x = _x + (measurement - _x) * _k;
     }
 
+    // <summary>
+    // Updates the internal estimation based on measurement. Returns the new estimated position of
+    // the object x.
+    //
+    // This is the same as Update except also accepting a new measurement variance.
+    // </summary>
     public Vector3 Update(Vector3 measurement, float r) {
       _r = r;
       return Update(measurement);
