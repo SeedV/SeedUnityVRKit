@@ -16,7 +16,7 @@ namespace SeedUnityVRKit {
     private readonly float _q;
     // Variance of how confident the measurement is. The larger this value, the less confident the
     // measurement is.
-    private readonly float _r;
+    private float _r;
     // Variance of how confident the current estimation is.
     // Predict:
     //   pPred = p + q
@@ -46,6 +46,11 @@ namespace SeedUnityVRKit {
       _k = pPred / (pPred + _r);
       _p = (1 - _k) * pPred;
       return _x = _x + (measurement - _x) * _k;
+    }
+
+    public Vector3 Update(Vector3 measurement, float r) {
+      _r = r;
+      return Update(measurement);
     }
   }
 }
