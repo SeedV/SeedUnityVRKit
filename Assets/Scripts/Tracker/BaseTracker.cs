@@ -96,7 +96,7 @@ namespace SeedUnityVRKit {
         systemStats?.IncrementFrameReadTexture();
         _graphRunner.AddTextureFrameToInputStream(textureFrame);
         systemStats?.IncrementFrameAddToInputStream();
-        yield return null;
+        yield return new WaitForEndOfFrame();
       }
     }
 
