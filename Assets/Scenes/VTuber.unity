@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -142,6 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxRotationThreshold: 40
   ScreenWidth: 1920
+  _neckInitRotation: {x: 0.49999997, y: -0.49999997, z: -0.49999997, w: 0.49999997}
   ScreenHeight: 1080
 --- !u!95 &364035618 stripped
 Animator:
@@ -373,7 +374,7 @@ MonoBehaviour:
   _cpuConfig: {fileID: 4900000, guid: a901443779a96c97890cab1b274b506f, type: 3}
   _gpuConfig: {fileID: 4900000, guid: 8eaa695afee89c8eea9241f8a5ab9645, type: 3}
   _openGlEsConfig: {fileID: 4900000, guid: 5db98b44b5bd2a0e8b5c7dec21d0577d, type: 3}
-  _timeoutMicrosec: 0
+  _timeoutMicrosec: 10000
   refineFaceLandmarks: 0
   modelComplexity: 0
   smoothLandmarks: 1
