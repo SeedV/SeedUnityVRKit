@@ -30,6 +30,7 @@ namespace SeedUnityVRKit {
     public int ScreenWidth;
     public int ScreenHeight;
     public NormalizedLandmarkList HandLandmarkList { private get; set; }
+    public Quaternion InitRotation = Quaternion.Euler(0, 0, 0);
 
     // Total number of landmarks in HandPose model, per hand.
     private const int _landmarksNum = 21;
@@ -57,7 +58,7 @@ namespace SeedUnityVRKit {
 
     void Update() {
       transform.position = _target.transform.position;
-      _target.rotation = ComputeWristRotation();
+      _target.rotation = ComputeWristRotation() * InitRotation;
 
       if (HandLandmarkList != null) {
         NormalizedLandmark landmark0 = HandLandmarkList.Landmark[0];
