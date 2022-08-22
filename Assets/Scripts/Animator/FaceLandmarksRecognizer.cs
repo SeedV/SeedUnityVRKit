@@ -37,7 +37,7 @@ namespace SeedUnityVRKit {
                    // Upper contour (excluding corners).
                    466, 388, 387, 386, 385, 384, 398
         };
-    private static readonly float _eyeOpenThreshold = 0.33f;
+    private static readonly float _eyeOpenThreshold = 0.22f;
     /// <summary>
     /// Constant canonical face model from
     /// https://github.com/google/mediapipe/blob/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
