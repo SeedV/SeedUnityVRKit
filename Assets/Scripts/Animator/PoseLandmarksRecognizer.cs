@@ -53,10 +53,10 @@ namespace SeedUnityVRKit {
             _filterDict["rightHip"].Update(toVector(poseLandmarks.Landmark[Landmarks.RightHip]));
         Vector3 leftShoulder = _filterDict["leftShoulder"].Update(
             toVector(poseLandmarks.Landmark[Landmarks.LeftShoulder]));
-        Vector3 leftElbow = _filterDict["leftElbow"].Update(
-            toVector(poseLandmarks.Landmark[Landmarks.LeftElbow]));
-        Vector3 leftWrist = _filterDict["leftWrist"].Update(
-            toVector(poseLandmarks.Landmark[Landmarks.LeftWrist]));
+        Vector3 leftElbow =
+            _filterDict["leftElbow"].Update(toVector(poseLandmarks.Landmark[Landmarks.LeftElbow]));
+        Vector3 leftWrist =
+            _filterDict["leftWrist"].Update(toVector(poseLandmarks.Landmark[Landmarks.LeftWrist]));
         Vector3 rightShoulder = _filterDict["rightShoulder"].Update(
             toVector(poseLandmarks.Landmark[Landmarks.RightShoulder]));
         Vector3 rightElbow = _filterDict["rightElbow"].Update(
@@ -69,7 +69,7 @@ namespace SeedUnityVRKit {
         // Note: left and right are mirrored here.
 
         landmarks.Add(
-          new PoseLandmark { Id = Landmarks.Hip, Rotation = Quaternion.LookRotation(forward) });
+            new PoseLandmark { Id = Landmarks.Hip, Rotation = Quaternion.LookRotation(forward) });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.LeftShoulder,
           Rotation = Quaternion.LookRotation(rightShoulder - rightElbow, -forward)
@@ -81,13 +81,11 @@ namespace SeedUnityVRKit {
         });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.RightShoulder,
-          Rotation = Quaternion.LookRotation(
-            leftShoulder - leftElbow, -forward)
+          Rotation = Quaternion.LookRotation(leftShoulder - leftElbow, -forward)
         });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.RightElbow,
-          Rotation = Quaternion.LookRotation(
-            leftElbow - leftWrist, leftShoulder - leftElbow)
+          Rotation = Quaternion.LookRotation(leftElbow - leftWrist, leftShoulder - leftElbow)
         });
       }
 
