@@ -51,9 +51,7 @@ namespace SeedUnityVRKit {
       _neck = anim.GetBoneTransform(HumanBodyBones.Neck);
       _faceLandmarksRecognizer = new FaceLandmarksRecognizer(ScreenWidth, ScreenHeight);
       _poseLandmarksRecognizer = new PoseLandmarksRecognizer(ScreenWidth, ScreenHeight);
-      _mouthMeshRenderer = GameObject.Find(MthDefConst).GetComponent<SkinnedMeshRenderer>();
-      _eyeMeshRenderer = GameObject.Find(EyeDefConst).GetComponent<SkinnedMeshRenderer>();
-      _elMeshRenderer = GameObject.Find(ElDefConst).GetComponent<SkinnedMeshRenderer>();
+      GetSpecialPart();
     }
 
     private void setupJoints(Animator anim) {
@@ -86,7 +84,7 @@ namespace SeedUnityVRKit {
 
       // Assuming body is always facing the -Z axis.
       // In the future if we need to turn the upper body, we may revise this.
-      Vector3 forward = new Vector3(0, 0, -1);
+      Vector3 forward = new Vector3(0, 0, 0);
       foreach (Joint joint in _joints) {
         if (joint != null && joint.Child != null) {
           joint.Forward = Quaternion.LookRotation(joint.position - joint.Child.position, forward);
@@ -111,6 +109,11 @@ namespace SeedUnityVRKit {
           _joints[poseLandmark.Id].SetRotation(poseLandmark.Rotation);
         }
       }
+    }
+    public virtual void GetSpecialPart() {
+      _mouthMeshRenderer = GameObject.Find(MthDefConst).GetComponent<SkinnedMeshRenderer>();
+      _eyeMeshRenderer = GameObject.Find(EyeDefConst).GetComponent<SkinnedMeshRenderer>();
+      _elMeshRenderer = GameObject.Find(ElDefConst).GetComponent<SkinnedMeshRenderer>();
     }
 
     public virtual void SetMouth(FaceLandmarks faceLandmarks) {
