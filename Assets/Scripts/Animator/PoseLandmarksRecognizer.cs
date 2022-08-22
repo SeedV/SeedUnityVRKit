@@ -75,7 +75,7 @@ namespace SeedUnityVRKit {
                                              rightShoulder - rightElbow, -forward) });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.LeftElbow,
-          Rotation = Quaternion.LookRotation(rightElbow - rightWrist,rightShoulder - rightElbow)
+          Rotation = Quaternion.LookRotation(rightElbow - rightWrist, rightShoulder - rightElbow)
         });
         landmarks.Add(new PoseLandmark { Id = Landmarks.RightShoulder,
                                          Rotation = Quaternion.LookRotation(
