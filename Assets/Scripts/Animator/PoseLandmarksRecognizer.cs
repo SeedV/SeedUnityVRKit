@@ -27,16 +27,16 @@ namespace SeedUnityVRKit {
     /// <summary>Screen height used as to scale the recognized normalized landmarks.</summary>
     private readonly float _screenHeight;
     private static Dictionary<string, KalmanFilter> _filterDict =
-      new Dictionary<string, KalmanFilter> {
-        { "leftHip" , new KalmanFilter(0.125f, 1f) },
-        { "rightHip" , new KalmanFilter(0.125f, 1f) },
-        { "leftShoulder" , new KalmanFilter(0.125f, 1f) },
-        { "leftElbow" , new KalmanFilter(0.125f, 1f) },
-        { "leftWrist" , new KalmanFilter(0.125f, 1f) },
-        { "rightShoulder" , new KalmanFilter(0.125f, 1f) },
-        { "rightElbow" , new KalmanFilter(0.125f, 1f) },
-        { "rightWrist" , new KalmanFilter(0.125f, 1f) },
-      };
+        new Dictionary<string, KalmanFilter> {
+          { "leftHip" , new KalmanFilter(0.125f, 1f) },
+          { "rightHip" , new KalmanFilter(0.125f, 1f) },
+          { "leftShoulder" , new KalmanFilter(0.125f, 1f) },
+          { "leftElbow" , new KalmanFilter(0.125f, 1f) },
+          { "leftWrist" , new KalmanFilter(0.125f, 1f) },
+          { "rightShoulder" , new KalmanFilter(0.125f, 1f) },
+          { "rightElbow" , new KalmanFilter(0.125f, 1f) },
+          { "rightWrist" , new KalmanFilter(0.125f, 1f) },
+        };
 
     public PoseLandmarksRecognizer(float screenWidth, float screenHeight) {
       _screenWidth = screenWidth;
@@ -47,57 +47,45 @@ namespace SeedUnityVRKit {
       PoseLandmarks landmarks = new PoseLandmarks();
 
       if (isBodyVisibe(poseLandmarks)) {
-        Vector3 leftHip =
-              _filterDict["leftHip"].Update(
+        Vector3 leftHip = _filterDict["leftHip"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.LeftHip]));
-        Vector3 rightHip =
-              _filterDict["rightHip"].Update(
+        Vector3 rightHip = _filterDict["rightHip"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.RightHip]));
-        Vector3 leftShoulder =
-              _filterDict["leftShoulder"].Update(
+        Vector3 leftShoulder = _filterDict["leftShoulder"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.LeftShoulder]));
-        Vector3 leftElbow =
-              _filterDict["leftElbow"].Update(
+        Vector3 leftElbow = _filterDict["leftElbow"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.LeftElbow]));
-        Vector3 leftWrist =
-              _filterDict["leftWrist"].Update(
+        Vector3 leftWrist = _filterDict["leftWrist"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.LeftWrist]));
-        Vector3 rightShoulder =
-              _filterDict["rightShoulder"].Update(
+        Vector3 rightShoulder = _filterDict["rightShoulder"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.RightShoulder]));
-        Vector3 rightElbow =
-              _filterDict["rightElbow"].Update(
+        Vector3 rightElbow = _filterDict["rightElbow"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.RightElbow]));
-        Vector3 rightWrist =
-              _filterDict["rightWrist"].Update(
+        Vector3 rightWrist = _filterDict["rightWrist"].Update(
                 toVector(poseLandmarks.Landmark[Landmarks.RightWrist]));
 
         Vector3 forward = GetNormal(leftShoulder, leftHip, rightHip);
 
         // Note: left and right are mirrored here.
 
-        landmarks.Add(new PoseLandmark {
-          Id = Landmarks.Hip,
-          Rotation = Quaternion.LookRotation(forward)
-        });
+        landmarks.Add(new PoseLandmark { Id = Landmarks.Hip, Rotation = Quaternion.LookRotation(forward) });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.LeftShoulder,
-          Rotation = Quaternion.LookRotation(
-                                             rightShoulder - rightElbow, -forward)
+          Rotation = Quaternion.LookRotation(rightShoulder - rightElbow, -forward)
         });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.LeftElbow,
-          Rotation = Quaternion.LookRotation(
-                                             rightElbow - rightWrist, rightShoulder - rightElbow)
+          Rotation = Quaternion.LookRotation(rightElbow - rightWrist, rightShoulder - rightElbow)
         });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.RightShoulder,
-          Rotation = Quaternion.LookRotation(leftShoulder - leftElbow, -forward)
+          Rotation = Quaternion.LookRotation(
+            leftShoulder - leftElbow, -forward)
         });
         landmarks.Add(new PoseLandmark {
           Id = Landmarks.RightElbow,
           Rotation = Quaternion.LookRotation(
-                                             leftElbow - leftWrist, leftShoulder - leftElbow)
+            leftElbow - leftWrist, leftShoulder - leftElbow)
         });
       }
 
