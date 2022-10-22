@@ -40,6 +40,7 @@ namespace SeedUnityVRKit {
 
     private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
     private float _screenRatio = 1.0f;
+    private KalmanFilter[] _kalmanFilters = new KalmanFilter[_landmarksNum];
 
     void Start() {
       // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
@@ -51,6 +52,7 @@ namespace SeedUnityVRKit {
       for (int i = 0; i < _landmarksNum; i++) {
         _handLandmarks[i] = new GameObject($"HandLandmark{i}");
         _handLandmarks[i].transform.parent = transform;
+        _kalmanFilters[i] = new KalmanFilter(0.125f, 1f);
       }
       _screenRatio = 1.0f * ScreenWidth / ScreenHeight;
     }
@@ -67,7 +69,7 @@ namespace SeedUnityVRKit {
         for (int i = 1; i < HandLandmarkList.Landmark.Count; i++) {
           NormalizedLandmark landmark = HandLandmarkList.Landmark[i];
           Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);
-          _handLandmarks[i].transform.localPosition = tip;
+          _handLandmarks[i].transform.localPosition = _kalmanFilters[i].Update(tip);
         }
       }
     }
