@@ -41,6 +41,10 @@ namespace SeedUnityVRKit {
     private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
     private float _screenRatio = 1.0f;
     private KalmanFilter[] _kalmanFilters = new KalmanFilter[_landmarksNum];
+    // The forward direction of the wrist. Computed by OrthoNormalize of the positions of index
+    // finger, middle finger and wrist.
+    private Vector3 _forwardVector;
+    private Quaternion _wristRotation = Quaternion.Euler(0, 0, 0);
 
     void Start() {
       // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
@@ -58,9 +62,6 @@ namespace SeedUnityVRKit {
     }
 
     void Update() {
-      transform.position = _target.transform.position;
-      _target.rotation = ComputeWristRotation();
-
       if (HandLandmarkList != null) {
         NormalizedLandmark landmark0 = HandLandmarkList.Landmark[0];
         NormalizedLandmark landmark1 = HandLandmarkList.Landmark[1];
@@ -71,6 +72,13 @@ namespace SeedUnityVRKit {
           Vector3 tip = Vector3.Scale(ToVector(landmark) - ToVector(landmark0), scale);
           _handLandmarks[i].transform.localPosition = _kalmanFilters[i].Update(tip);
         }
+      }
+
+      ComputeWristRotation();
+
+      if (AreHandsFacingForward()) {
+        transform.position = _target.transform.position;
+        _target.rotation = _wristRotation;
       }
     }
 
@@ -96,7 +104,7 @@ namespace SeedUnityVRKit {
       return new Vector3(landmark.X, landmark.Y, landmark.Z);
     }
 
-    private Quaternion ComputeWristRotation() {
+    private void ComputeWristRotation() {
       var wristTransform = transform;
       var indexFinger = _handLandmarks[5].transform.position;
       var middleFinger = _handLandmarks[9].transform.position;
@@ -104,8 +112,16 @@ namespace SeedUnityVRKit {
       var vectorToMiddle = middleFinger - wristTransform.position;
       var vectorToIndex = indexFinger - wristTransform.position;
       Vector3.OrthoNormalize(ref vectorToMiddle, ref vectorToIndex);
-      Vector3 normalVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
-      return Quaternion.LookRotation(normalVector, vectorToIndex);
+      _forwardVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
+      _wristRotation = Quaternion.LookRotation(_forwardVector, vectorToIndex);
+    }
+
+    private bool AreHandsFacingForward() {
+      // TODO: normalizing before angle computation can be removed?
+      return (handType == HandType.LeftHand &&
+                  Vector3.Angle(_forwardVector.normalized, Vector3.forward) < 90.0f ||
+              handType == HandType.RightHand &&
+                  Vector3.Angle(_forwardVector.normalized, Vector3.forward) > 90.0f);
     }
   }
 }
