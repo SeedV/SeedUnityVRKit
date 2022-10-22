@@ -118,10 +118,9 @@ namespace SeedUnityVRKit {
 
     private bool AreHandsFacingForward() {
       // TODO: normalizing before angle computation can be removed?
-      return (handType == HandType.LeftHand &&
-                  Vector3.Angle(_forwardVector.normalized, Vector3.forward) < 90.0f ||
-              handType == HandType.RightHand &&
-                  Vector3.Angle(_forwardVector.normalized, Vector3.forward) > 90.0f);
+      var wristAngle = Vector3.Angle(_forwardVector.normalized, Vector3.forward);
+      return (handType == HandType.LeftHand && wristAngle < 90.0f ||
+              handType == HandType.RightHand && wristAngle > 90.0f);
     }
   }
 }
