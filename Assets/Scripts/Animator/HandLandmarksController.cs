@@ -15,6 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Color = UnityEngine.Color;
 
 using Mediapipe;
@@ -22,6 +23,26 @@ using Mediapipe.Unity;
 
 namespace SeedUnityVRKit {
   public enum HandType { LeftHand, RightHand }
+
+  public class HandLandmarks {
+    public const int ThumbProximal = 0;
+    public const int ThumbIntermediate = 1;
+    public const int ThumbDistal = 2;
+    public const int IndexProximal = 3;
+    public const int IndexIntermediate = 4;
+    public const int IndexDistal = 5;
+    public const int MiddleProximal = 6;
+    public const int MiddleIntermediate = 7;
+    public const int MiddleDistal = 8;
+    public const int RingProximal = 9;
+    public const int RingIntermediate = 10;
+    public const int RingDistal = 11;
+    public const int LittleProximal = 12;
+    public const int LittleIntermediate = 13;
+    public const int LittleDistal = 14;
+    public const int Total = 15;
+  };
+
   public class HandLandmarksController : MonoBehaviour {
     [Tooltip("Set it to the character's animator game object.")]
     public Animator anim;
@@ -45,6 +66,8 @@ namespace SeedUnityVRKit {
     // finger, middle finger and wrist.
     private Vector3 _forwardVector;
     private Quaternion _wristRotation = Quaternion.Euler(0, 0, 0);
+    private Transform[] _fingerTargets = new Transform[HandLandmarks.Total];
+    public Quaternion InitFingerRotation = Quaternion.Euler(0, 0, 0);
 
     void Start() {
       // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
@@ -59,6 +82,7 @@ namespace SeedUnityVRKit {
         _kalmanFilters[i] = new KalmanFilter(0.125f, 1f);
       }
       _screenRatio = 1.0f * ScreenWidth / ScreenHeight;
+      assignFingerTargets();
     }
 
     void Update() {
@@ -75,11 +99,10 @@ namespace SeedUnityVRKit {
       }
 
       ComputeWristRotation();
+      transform.position = _target.transform.position;
+      _target.rotation = _wristRotation;
 
-      if (AreHandsFacingForward()) {
-        transform.position = _target.transform.position;
-        _target.rotation = _wristRotation;
-      }
+      ComputeFingerRotation();
     }
 
     void OnDrawGizmos() {
@@ -97,6 +120,14 @@ namespace SeedUnityVRKit {
       foreach (var handLandmark in _handLandmarks) {
         if (handLandmark != null)
           Gizmos.DrawSphere(handLandmark.transform.position, 0.005f);
+      }
+
+      var bone = _fingerTargets[HandLandmarks.RingIntermediate];
+      if (bone != null) {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(bone.position, bone.TransformDirection(Vector3.forward));
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(bone.position, bone.TransformDirection(Vector3.up));
       }
     }
 
@@ -116,11 +147,108 @@ namespace SeedUnityVRKit {
       _wristRotation = Quaternion.LookRotation(_forwardVector, vectorToIndex);
     }
 
-    private bool AreHandsFacingForward() {
-      // TODO: normalizing before angle computation can be removed?
-      var wristAngle = Vector3.Angle(_forwardVector.normalized, Vector3.forward);
-      return (handType == HandType.LeftHand && wristAngle < 90.0f ||
-              handType == HandType.RightHand && wristAngle > 90.0f);
+    private void ComputeFingerRotation() {
+      var rotationTable = new(int fingerId, int landmarkId1, int landmarkId2)[] {
+        (0, 1, 2),    (1, 2, 3),    (2, 3, 4),    (3, 5, 6),    (4, 6, 7),
+        (5, 7, 8),    (6, 9, 10),   (7, 10, 11),  (8, 11, 12),  (9, 13, 14),
+        (10, 14, 15), (11, 15, 16), (12, 17, 18), (13, 18, 19), (14, 19, 20)
+      };
+      var wristTransform = transform;
+      var middleFinger = _handLandmarks[9].transform.position;
+      var vectorToMiddle = middleFinger - wristTransform.position;
+      foreach (var (fingerId, landmarkId1, landmarkId2) in rotationTable) {
+        var lookAt = _handLandmarks[landmarkId2].transform.position -
+                     _handLandmarks[landmarkId1].transform.position;
+        var upwards = GetNormal(transform.position, _handLandmarks[landmarkId1].transform.position,
+                                _handLandmarks[landmarkId2].transform.position);
+        _fingerTargets[fingerId].rotation =
+            Quaternion.LookRotation(lookAt, upwards) * InitFingerRotation;
+      }
+    }
+
+    private void assignFingerTargets() {
+      // The output of HandPose detection is mirrored here.
+      if (handType == HandType.LeftHand) {
+        _fingerTargets[HandLandmarks.ThumbProximal] =
+            anim.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+        _fingerTargets[HandLandmarks.ThumbIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.RightThumbIntermediate);
+        _fingerTargets[HandLandmarks.ThumbDistal] =
+            anim.GetBoneTransform(HumanBodyBones.RightThumbDistal);
+        _fingerTargets[HandLandmarks.IndexProximal] =
+            anim.GetBoneTransform(HumanBodyBones.RightIndexProximal);
+        _fingerTargets[HandLandmarks.IndexIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.RightIndexIntermediate);
+        _fingerTargets[HandLandmarks.IndexDistal] =
+            anim.GetBoneTransform(HumanBodyBones.RightIndexDistal);
+        _fingerTargets[HandLandmarks.MiddleProximal] =
+            anim.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+        _fingerTargets[HandLandmarks.MiddleIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.RightMiddleIntermediate);
+        _fingerTargets[HandLandmarks.MiddleDistal] =
+            anim.GetBoneTransform(HumanBodyBones.RightMiddleDistal);
+        _fingerTargets[HandLandmarks.RingProximal] =
+            anim.GetBoneTransform(HumanBodyBones.RightRingProximal);
+        _fingerTargets[HandLandmarks.RingIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.RightRingIntermediate);
+        _fingerTargets[HandLandmarks.RingDistal] =
+            anim.GetBoneTransform(HumanBodyBones.RightRingDistal);
+        _fingerTargets[HandLandmarks.LittleProximal] =
+            anim.GetBoneTransform(HumanBodyBones.RightLittleProximal);
+        _fingerTargets[HandLandmarks.LittleIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.RightLittleIntermediate);
+        _fingerTargets[HandLandmarks.LittleDistal] =
+            anim.GetBoneTransform(HumanBodyBones.RightLittleDistal);
+      } else {
+        _fingerTargets[HandLandmarks.ThumbProximal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+        _fingerTargets[HandLandmarks.ThumbIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate);
+        _fingerTargets[HandLandmarks.ThumbDistal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftThumbDistal);
+        _fingerTargets[HandLandmarks.IndexProximal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+        _fingerTargets[HandLandmarks.IndexIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.LeftIndexIntermediate);
+        _fingerTargets[HandLandmarks.IndexDistal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftIndexDistal);
+        _fingerTargets[HandLandmarks.MiddleProximal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+        _fingerTargets[HandLandmarks.MiddleIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.LeftMiddleIntermediate);
+        _fingerTargets[HandLandmarks.MiddleDistal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftMiddleDistal);
+        _fingerTargets[HandLandmarks.RingProximal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftRingProximal);
+        _fingerTargets[HandLandmarks.RingIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.LeftRingIntermediate);
+        _fingerTargets[HandLandmarks.RingDistal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftRingDistal);
+        _fingerTargets[HandLandmarks.LittleProximal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
+        _fingerTargets[HandLandmarks.LittleIntermediate] =
+            anim.GetBoneTransform(HumanBodyBones.LeftLittleIntermediate);
+        _fingerTargets[HandLandmarks.LittleDistal] =
+            anim.GetBoneTransform(HumanBodyBones.LeftLittleDistal);
+      }
+    }
+
+    // <summary>
+    // Get the normal to a triangle from the three corner points, a, b and c.
+    // See https://docs.unity3d.com/ScriptReference/Vector3.Cross.html.
+    // </summary>
+    // <exception cref="Assertions.AssertionException">
+    // An assertion is thrown if the sides from input vectors are parallel.
+    // </exception>
+    private Vector3 GetNormal(Vector3 a, Vector3 b, Vector3 c) {
+      // Find vectors corresponding to two of the sides of the triangle.
+      Vector3 side1 = b - a;
+      Vector3 side2 = c - a;
+
+      // Cross the vectors to get a perpendicular vector, then normalize it.
+      Vector3 result = Vector3.Cross(side1, side2).normalized;
+      Assert.AreNotEqual(Vector3.zero, result, "The sides from input vectors are parallel.");
+      return result;
     }
   }
 }
