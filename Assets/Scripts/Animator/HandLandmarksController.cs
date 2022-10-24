@@ -109,24 +109,47 @@ namespace SeedUnityVRKit {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(_target.position, 0.005f);
         Gizmos.color = Color.yellow;
-        Vector3 direction = _target.TransformDirection(Vector3.forward) * 1;
+        Vector3 direction = _target.TransformDirection(Vector3.forward) * 0.1f;
         if (handType == HandType.LeftHand) {
           direction = -direction;
         }
         Gizmos.DrawRay(_target.position, direction);
       }
+      // drawGizmoFingerJointsSpheres();
+      // drawGizmoFingerSkeleton();
+
+      drawGizmoFingerJointsForward();
+    }
+
+    private void drawGizmoFingerJointsSpheres() {
       Gizmos.color = Color.red;
       foreach (var handLandmark in _handLandmarks) {
         if (handLandmark != null)
           Gizmos.DrawSphere(handLandmark.transform.position, 0.005f);
       }
+    }
 
-      var bone = _fingerTargets[HandLandmarks.RingIntermediate];
-      if (bone != null) {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(bone.position, bone.TransformDirection(Vector3.forward));
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(bone.position, bone.TransformDirection(Vector3.up));
+    private void drawGizmoFingerSkeleton() {
+      Gizmos.color = Color.white;
+      Gizmos.DrawLine(_handLandmarks[0].transform.position, _handLandmarks[1].transform.position);
+      Gizmos.DrawLine(_handLandmarks[1].transform.position, _handLandmarks[2].transform.position);
+      Gizmos.DrawLine(_handLandmarks[2].transform.position, _handLandmarks[3].transform.position);
+      Gizmos.DrawLine(_handLandmarks[3].transform.position, _handLandmarks[4].transform.position);
+      Gizmos.DrawLine(_handLandmarks[0].transform.position, _handLandmarks[5].transform.position);
+      Gizmos.DrawLine(_handLandmarks[5].transform.position, _handLandmarks[6].transform.position);
+      Gizmos.DrawLine(_handLandmarks[6].transform.position, _handLandmarks[7].transform.position);
+      Gizmos.DrawLine(_handLandmarks[7].transform.position, _handLandmarks[8].transform.position);
+    }
+
+    private void drawGizmoFingerJointsForward() {
+      if (_fingerTargets != null) {
+        for (int i = 9; i < 12; i++) {
+          var bone = _fingerTargets[i];
+          if (bone != null) {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(bone.position, bone.TransformDirection(Vector3.forward) * 0.1f);
+          }
+        }
       }
     }
 
