@@ -153,9 +153,6 @@ namespace SeedUnityVRKit {
         (5, 7, 8),    (6, 9, 10),   (7, 10, 11),  (8, 11, 12),  (9, 13, 14),
         (10, 14, 15), (11, 15, 16), (12, 17, 18), (13, 18, 19), (14, 19, 20)
       };
-      var wristTransform = transform;
-      var middleFinger = _handLandmarks[9].transform.position;
-      var vectorToMiddle = middleFinger - wristTransform.position;
       foreach (var (fingerId, landmarkId1, landmarkId2) in rotationTable) {
         var lookAt = _handLandmarks[landmarkId2].transform.position -
                      _handLandmarks[landmarkId1].transform.position;
