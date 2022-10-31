@@ -115,13 +115,13 @@ namespace SeedUnityVRKit {
         }
         Gizmos.DrawRay(_target.position, direction);
       }
-      // drawGizmoFingerJointsSpheres();
-      // drawGizmoFingerSkeleton();
+      // DrawGizmoFingerJointsSpheres();
+      // DrawGizmoFingerSkeleton();
 
-      drawGizmoFingerJointsForward();
+      DrawGizmoFingerJointsForward();
     }
 
-    private void drawGizmoFingerJointsSpheres() {
+    private void DrawGizmoFingerJointsSpheres() {
       Gizmos.color = Color.red;
       foreach (var handLandmark in _handLandmarks) {
         if (handLandmark != null)
@@ -129,7 +129,7 @@ namespace SeedUnityVRKit {
       }
     }
 
-    private void drawGizmoFingerSkeleton() {
+    private void DrawGizmoFingerSkeleton() {
       Gizmos.color = Color.white;
       Gizmos.DrawLine(_handLandmarks[0].transform.position, _handLandmarks[1].transform.position);
       Gizmos.DrawLine(_handLandmarks[1].transform.position, _handLandmarks[2].transform.position);
@@ -141,7 +141,7 @@ namespace SeedUnityVRKit {
       Gizmos.DrawLine(_handLandmarks[7].transform.position, _handLandmarks[8].transform.position);
     }
 
-    private void drawGizmoFingerJointsForward() {
+    private void DrawGizmoFingerJointsForward() {
       if (_fingerTargets != null) {
         for (int i = 9; i < 12; i++) {
           var bone = _fingerTargets[i];
