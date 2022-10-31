@@ -67,7 +67,6 @@ namespace SeedUnityVRKit {
     private Vector3 _forwardVector;
     private Quaternion _wristRotation = Quaternion.Euler(0, 0, 0);
     private Transform[] _fingerTargets = new Transform[HandLandmarks.Total];
-    public Quaternion InitFingerRotation = Quaternion.Euler(0, 0, 0);
 
     void Start() {
       // Note: HandPose use camera perspective to determine left and right hand, which is mirrored
@@ -154,12 +153,13 @@ namespace SeedUnityVRKit {
         (10, 14, 15), (11, 15, 16), (12, 17, 18), (13, 18, 19), (14, 19, 20)
       };
       foreach (var (fingerId, landmarkId1, landmarkId2) in rotationTable) {
-        var lookAt = _handLandmarks[landmarkId2].transform.position -
-                     _handLandmarks[landmarkId1].transform.position;
-        var upwards = GetNormal(transform.position, _handLandmarks[landmarkId1].transform.position,
-                                _handLandmarks[landmarkId2].transform.position);
-        _fingerTargets[fingerId].rotation =
-            Quaternion.LookRotation(lookAt, upwards) * InitFingerRotation;
+        Vector3 fingerDirection = _handLandmarks[landmarkId2].transform.position -
+                                  _handLandmarks[landmarkId1].transform.position;
+        Vector3 right =
+            GetNormal(transform.position, _handLandmarks[landmarkId1].transform.position,
+                      _handLandmarks[landmarkId2].transform.position);
+        Vector3 forward = Vector3.Cross(right, fingerDirection);
+        _fingerTargets[fingerId].rotation = Quaternion.LookRotation(forward, right);
       }
     }
 
