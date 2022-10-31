@@ -62,7 +62,6 @@ namespace SeedUnityVRKit {
     private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
     private float _screenRatio = 1.0f;
     private KalmanFilter[] _kalmanFilters = new KalmanFilter[_landmarksNum];
-    private Quaternion _wristRotation = Quaternion.Euler(0, 0, 0);
     private Transform[] _fingerTargets = new Transform[HandLandmarks.Total];
 
     void Start() {
@@ -94,9 +93,8 @@ namespace SeedUnityVRKit {
         }
       }
 
-      ComputeWristRotation();
       transform.position = _target.transform.position;
-      _target.rotation = _wristRotation;
+      _target.rotation = ComputeWristRotation();
 
       ComputeFingerRotation();
     }
@@ -154,7 +152,7 @@ namespace SeedUnityVRKit {
       return new Vector3(landmark.X, landmark.Y, landmark.Z);
     }
 
-    private void ComputeWristRotation() {
+    private Quaternion ComputeWristRotation() {
       var wristTransform = transform;
       var indexFinger = _handLandmarks[5].transform.position;
       var middleFinger = _handLandmarks[9].transform.position;
@@ -163,7 +161,7 @@ namespace SeedUnityVRKit {
       var vectorToIndex = indexFinger - wristTransform.position;
       Vector3.OrthoNormalize(ref vectorToMiddle, ref vectorToIndex);
       Vector3 normalVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
-      _wristRotation = Quaternion.LookRotation(normalVector, vectorToIndex);
+      return Quaternion.LookRotation(normalVector, vectorToIndex);
     }
 
     private void ComputeFingerRotation() {
