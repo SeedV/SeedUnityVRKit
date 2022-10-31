@@ -62,9 +62,6 @@ namespace SeedUnityVRKit {
     private GameObject[] _handLandmarks = new GameObject[_landmarksNum];
     private float _screenRatio = 1.0f;
     private KalmanFilter[] _kalmanFilters = new KalmanFilter[_landmarksNum];
-    // The forward direction of the wrist. Computed by OrthoNormalize of the positions of index
-    // finger, middle finger and wrist.
-    private Vector3 _forwardVector;
     private Quaternion _wristRotation = Quaternion.Euler(0, 0, 0);
     private Transform[] _fingerTargets = new Transform[HandLandmarks.Total];
 
@@ -81,7 +78,7 @@ namespace SeedUnityVRKit {
         _kalmanFilters[i] = new KalmanFilter(0.125f, 1f);
       }
       _screenRatio = 1.0f * ScreenWidth / ScreenHeight;
-      assignFingerTargets();
+      AssignFingerTargets();
     }
 
     void Update() {
@@ -165,8 +162,8 @@ namespace SeedUnityVRKit {
       var vectorToMiddle = middleFinger - wristTransform.position;
       var vectorToIndex = indexFinger - wristTransform.position;
       Vector3.OrthoNormalize(ref vectorToMiddle, ref vectorToIndex);
-      _forwardVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
-      _wristRotation = Quaternion.LookRotation(_forwardVector, vectorToIndex);
+      Vector3 normalVector = Vector3.Cross(vectorToIndex, vectorToMiddle);
+      _wristRotation = Quaternion.LookRotation(normalVector, vectorToIndex);
     }
 
     private void ComputeFingerRotation() {
@@ -186,7 +183,7 @@ namespace SeedUnityVRKit {
       }
     }
 
-    private void assignFingerTargets() {
+    private void AssignFingerTargets() {
       // The output of HandPose detection is mirrored here.
       if (handType == HandType.LeftHand) {
         _fingerTargets[HandLandmarks.ThumbProximal] =
